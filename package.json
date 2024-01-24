@@ -1,9 +1,9 @@
 {
 	"private": true,
-	"name": "js-walkaround-template",
+	"name": "ggj2024",
 	"version": "1.0.0",
 	"description": "Template for a js walkaround game",
-	"author": "Sean S. LeBlanc <sean.s.leblanc@gmail.com>",
+	"author": "SweetHeart Squad <SweetHeartSquad@gmail.com>",
 	"type": "module",
 	"scripts": {
 		"start": "vite",
