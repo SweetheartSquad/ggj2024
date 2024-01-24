@@ -1,0 +1,5 @@
+textures/error.png
+textures/black.png
+textures/white.png
+textures/blank.png
+textures/dialogueBg.x3.png
