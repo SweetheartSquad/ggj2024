@@ -137,6 +137,7 @@ export class GameScene {
 
 		this.textInput = new TextInput();
 		this.textInput.setTarget('Sphinx of black quartz, hear my vow!');
+		this.container.addChild(this.textInput.sprScrim);
 		this.container.addChild(this.textInput.display.container);
 	}
 

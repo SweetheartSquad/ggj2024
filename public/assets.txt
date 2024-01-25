@@ -17,3 +17,4 @@ textures/borderPatternMagenta.png
 textures/borderPatternYellow.png
 
 textures/portrait.png
+textures/textBg.png
