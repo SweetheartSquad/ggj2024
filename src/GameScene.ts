@@ -1,4 +1,10 @@
-import { BitmapText, Container, DisplayObject, Graphics } from 'pixi.js';
+import {
+	BitmapText,
+	Container,
+	DisplayObject,
+	Graphics,
+	SCALE_MODES,
+} from 'pixi.js';
 import { Area } from './Area';
 import { Border } from './Border';
 import { Camera } from './Camera';
@@ -66,6 +72,7 @@ export class GameScene {
 			});
 			this.take(bgParallax);
 			this.container.addChild(bgParallax.display.container);
+			bgParallax.spr.texture.baseTexture.scaleMode = SCALE_MODES.LINEAR;
 
 			const start = Date.now();
 			bgParallax.scripts.push({
