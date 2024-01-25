@@ -54,11 +54,14 @@ export class GameScene {
 	focusAmt = 0.8;
 
 	constructor() {
-		const bgs = ['img_cheryl', 'img_cheryl', 'img_cheryl'];
+		const bgs = [
+			'borderPatternCyan',
+			'borderPatternMagenta',
+			'borderPatternYellow',
+		];
 		bgs.forEach((i, idx) => {
 			const bgParallax = new PropParallax({
 				texture: i,
-				alpha: 0.5,
 				mult: 1 + (idx + 1) / bgs.length,
 			});
 			this.take(bgParallax);
