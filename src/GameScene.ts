@@ -84,15 +84,19 @@ export class GameScene {
 			this.container.addChild(bgParallax.display.container);
 			bgParallax.spr.texture.baseTexture.scaleMode = SCALE_MODES.LINEAR;
 
-			const start = Date.now();
+			const start = game.app.ticker.lastTime;
 			bgParallax.scripts.push({
 				gameObject: bgParallax,
 				update() {
 					const speed = 100; // TODO: speed based on typing
 					bgParallax.spr.tilePosition.x =
-						((Date.now() - start) / 1000) * speed * bgParallax.mult[0];
+						((game.app.ticker.lastTime - start) / 1000) *
+						speed *
+						bgParallax.mult[0];
 					bgParallax.spr.tilePosition.y =
-						((Date.now() - start) / 1000) * speed * bgParallax.mult[1];
+						((game.app.ticker.lastTime - start) / 1000) *
+						speed *
+						bgParallax.mult[1];
 				},
 			});
 		});
@@ -110,9 +114,13 @@ export class GameScene {
 		this.border.scripts.push(
 			new Updater(this.border, () => {
 				this.sprPortrait.anchor.y =
-					Math.sin(Date.now() * 0.005) * 0.025 + this.portraitBump;
+					Math.sin(game.app.ticker.lastTime * 0.005) * 0.025 +
+					this.portraitBump;
 				this.sprPortrait.angle =
-					(eases.bounceInOut(Math.cos(Date.now() * 0.005) * 0.5 + 0.5) - 0.5) *
+					(eases.bounceInOut(
+						Math.cos(game.app.ticker.lastTime * 0.005) * 0.5 + 0.5
+					) -
+						0.5) *
 					5;
 			})
 		);
