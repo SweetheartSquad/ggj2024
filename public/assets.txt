@@ -18,3 +18,7 @@ textures/borderPatternYellow.png
 
 textures/portrait.png
 textures/textBg.png
+
+textures/neutral.x4.png
+
+textures/emptyFrame.png
