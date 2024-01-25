@@ -78,3 +78,11 @@ textures/portrait_mc_side_blink.png
 textures/portrait_mc_sad.png
 textures/portrait_mc_sad_open.png
 textures/portrait_mc_sad_blink.png
+
+textures/dialogueBg.x3.png
+
+textures/borderPatternCyan.png
+textures/borderPatternMagenta.png
+textures/borderPatternYellow.png
+
+textures/portrait.png
