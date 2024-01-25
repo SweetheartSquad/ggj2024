@@ -16,7 +16,6 @@
 		"analyze": "npx vite-bundle-visualizer -t sunburst"
 	},
 	"devDependencies": {
-		"@egjs/hammerjs": "^2.0.17",
 		"@types/browser-lang": "^0.1.0",
 		"@types/eases": "^1.0.2",
 		"@types/howler": "^2.2.7",
@@ -37,7 +36,6 @@
 		"imagemin": "^8.0.1",
 		"imagemin-jpeg-recompress": "^7.1.0",
 		"imagemin-webp": "^8.0.0",
-		"input-gamepads.js": "^3.0.4",
 		"localforage": "^1.10.0",
 		"pixi-filters": "^5.1.1",
 		"pixi.js": "^7.2.4",

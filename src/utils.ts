@@ -1,8 +1,5 @@
 import { Point, Texture } from 'pixi.js';
-import { resizer } from '.';
 import { resource } from './Game';
-import { size } from './config';
-import { getActiveScene, mouse } from './main';
 
 export const zero = new Point(0, 0);
 
@@ -252,26 +249,4 @@ export function smartify(str = '') {
 		.replace(/---/g, '—')
 		.replace(/--/g, '–')
 		.replace(/^([^]+) (.+?)$/, '$1\u00A0$2');
-}
-
-export function mousePos(event: MouseEvent) {
-	const rect = (event.currentTarget as HTMLElement)?.getBoundingClientRect();
-	const x = (event.clientX - rect.left) / window.resizer.scaleMultiplier;
-	const y = (event.clientY - rect.top) / window.resizer.scaleMultiplier;
-	const p = getActiveScene()?.camera.display.container.toLocal({ x, y });
-	return p;
-}
-
-/** @returns mouse position in coordinates normalized to original game size (i.e. ignoring CSS scale) */
-export function relativeMouse() {
-	return {
-		x:
-			((mouse.x - resizer.childElement.offsetLeft) /
-				resizer.childElement.clientWidth) *
-			size.x,
-		y:
-			((mouse.y - resizer.childElement.offsetTop) /
-				resizer.childElement.clientHeight) *
-			size.y,
-	};
 }

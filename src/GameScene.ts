@@ -8,7 +8,6 @@ import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { TweenManager } from './Tweens';
 import { V } from './VMath';
-import { getInput } from './main';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
