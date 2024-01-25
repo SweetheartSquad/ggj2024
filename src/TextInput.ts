@@ -24,12 +24,18 @@ export class TextInput extends GameObject {
 		this.strTarget = str;
 		this.text.forEach((i) => i.destroy());
 		this.text.length = 0;
-		this.strTarget.split('').forEach((i) => {
+		this.strTarget.split('').forEach((i, idx) => {
 			const t = new BitmapText(i, fontInput);
 			this.text.push(t);
-			t.x = this.display.container.width;
+			t.x = Math.max(
+				0,
+				(this.text[idx - 1]?.x ?? 0) +
+					(this.text[idx - 1]?.width ?? 0) +
+					(fontInput.letterSpacing ?? 0)
+			);
 			this.display.container.addChild(t);
 		});
+		this.display.container.x = -this.display.container.width / 2;
 		this.setCurrent('');
 	}
 
@@ -37,7 +43,9 @@ export class TextInput extends GameObject {
 		this.strCurrent = str;
 		this.text.forEach((i, idx) => {
 			i.text = this.strTarget[idx];
-			if (this.strCurrent.length <= idx) {
+			if (this.strCurrent.length === idx) {
+				i.tint = 0x00ff00;
+			} else if (this.strCurrent.length <= idx) {
 				i.tint = 0xbbbbbb;
 			} else if (this.strCurrent[idx] !== this.strTarget[idx]) {
 				i.text = this.strCurrent[idx];
