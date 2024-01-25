@@ -160,14 +160,9 @@ export class GameScene {
 		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
 		if (!type) return;
 		if (type === 'Backspace') {
-			this.textInput.setCurrent(
-				this.textInput.strCurrent.substring(
-					0,
-					this.textInput.strCurrent.length - 1
-				)
-			);
+			this.textInput.backspace();
 		} else {
-			this.textInput.setCurrent(`${this.textInput.strCurrent}${type}`);
+			this.textInput.addCurrent(type);
 			if (this.portraitBumpTween) TweenManager.abort(this.portraitBumpTween);
 			this.portraitBump = 0.1;
 			// @ts-expect-error weird `this` thing

@@ -7,6 +7,11 @@ import { Tween, TweenManager } from './Tweens';
 import { fontInput } from './font';
 import { tex } from './utils';
 
+const padding = 20;
+const tintCurrent = 0x00ff00;
+const tintUpcoming = 0xbbbbbb;
+const tintWrong = 0xff0000;
+const tintRight = 0xffffff;
 export class TextInput extends GameObject {
 	display: Display;
 	text: BitmapText[] = [];
@@ -39,27 +44,68 @@ export class TextInput extends GameObject {
 			this.display.container.addChild(t);
 		});
 		this.display.container.x = -this.display.container.width / 2;
-		this.setCurrent('');
+		this.sprScrim.width = this.display.container.width + padding;
+		this.sprScrim.height = this.display.container.height + padding;
+		this.clearCurrent();
 	}
 
-	setCurrent(str: string) {
-		this.strCurrent = str;
+	clearCurrent() {
+		this.strCurrent = '';
 		this.text.forEach((i, idx) => {
 			i.text = this.strTarget[idx];
 			i.anchor.x = 0;
 			i.anchor.y = 0;
-			if (this.strCurrent.length === idx) {
-				i.tint = 0x00ff00;
-			} else if (this.strCurrent.length <= idx) {
-				i.tint = 0xbbbbbb;
-			} else if (this.strCurrent[idx] !== this.strTarget[idx]) {
-				i.text = this.strCurrent[idx];
-				if (i.text === ' ') i.text = '_';
-				i.tint = 0xff0000;
-			} else {
-				i.tint = 0xffffff;
-			}
+			i.tint = tintUpcoming;
 		});
+		if (this.text[0]) this.text[0].tint = tintCurrent;
+		if (this.tweenX) TweenManager.abort(this.tweenX);
+		this.tweenX = TweenManager.tween(
+			this.display.container,
+			'x',
+			-this.display.container.width / 2 - this.strCurrent.length * 12,
+			100,
+			undefined,
+			eases.circOut
+		);
+	}
+
+	addCurrent(str: string) {
+		if (this.strCurrent.length >= this.strTarget.length) return;
+		this.strCurrent = `${this.strCurrent}${str}`;
+		const idx = this.strCurrent.length - 1;
+		const i = this.text[idx];
+		i.anchor.x = 0;
+		i.anchor.y = 0;
+		if (this.strCurrent[idx] !== this.strTarget[idx]) {
+			i.text = this.strCurrent[idx];
+			if (i.text === ' ') i.text = '_';
+			i.tint = tintWrong;
+		} else {
+			i.tint = tintRight;
+		}
+		const next = this.text[idx + 1];
+		if (next) next.tint = tintCurrent;
+		if (this.tweenX) TweenManager.abort(this.tweenX);
+		this.tweenX = TweenManager.tween(
+			this.display.container,
+			'x',
+			-this.display.container.width / 2 - this.strCurrent.length * 12,
+			100,
+			undefined,
+			eases.circOut
+		);
+	}
+
+	backspace() {
+		if (!this.strCurrent.length) return;
+		let idx = this.strCurrent.length - 1;
+		this.text[idx].tint = 0xbbbbbb;
+		this.text[idx].text = this.strTarget[idx];
+		this.strCurrent = this.strCurrent.substring(0, this.strCurrent.length - 1);
+		idx = this.strCurrent.length - 1;
+		if (idx < 0) return;
+		this.text[idx].tint = tintCurrent;
+		this.text[idx].text = this.strTarget[idx];
 		if (this.tweenX) TweenManager.abort(this.tweenX);
 		this.tweenX = TweenManager.tween(
 			this.display.container,
@@ -87,10 +133,7 @@ export class TextInput extends GameObject {
 				i.y = Math.sin(t * 0.01 + idx * 0.5) * 2;
 			}
 		});
-		const padding = 10;
 		this.sprScrim.x = this.display.container.x - padding;
-		this.sprScrim.y = this.display.container.y - padding;
-		this.sprScrim.width = this.display.container.width + padding;
-		this.sprScrim.height = this.display.container.height + padding;
+		this.sprScrim.y = this.display.container.y - padding / 2;
 	}
 }
