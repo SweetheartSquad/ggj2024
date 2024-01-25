@@ -4,6 +4,7 @@ import { Border } from './Border';
 import { Camera } from './Camera';
 import { game, resource } from './Game';
 import { GameObject } from './GameObject';
+import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { StrandE } from './StrandE';
 import { TweenManager } from './Tweens';
@@ -111,6 +112,30 @@ export class GameScene {
 		});
 		this.strand.scene = this;
 		this.strand.debug = DEBUG;
+
+		const bgs = ['img_cheryl', 'img_cheryl', 'img_cheryl'];
+		bgs.forEach((i, idx) => {
+			const bgParallax = new PropParallax({
+				texture: i,
+				alpha: 0.5,
+				mult: 1 + (idx + 1) / bgs.length,
+			});
+			this.take(bgParallax);
+			this.container.addChild(bgParallax.display.container);
+
+			const start = Date.now();
+			bgParallax.scripts.push({
+				gameObject: bgParallax,
+				update() {
+					const speed = 100; // TODO: speed based on typing
+					bgParallax.spr.tilePosition.x =
+						((Date.now() - start) / 1000) * speed * bgParallax.mult;
+					bgParallax.spr.tilePosition.y =
+						((Date.now() - start) / 1000) * speed * bgParallax.mult;
+				},
+			});
+		});
+
 		this.dialogue = new UIDialogue(this.strand);
 
 		this.border = new Border();
