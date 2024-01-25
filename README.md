@@ -14,7 +14,6 @@ Hot-reload is available for:
 
 - textures
 - audio
-- [`./public/assets/main-en.strand`](./public/assets/main-en.strand), which allows you to interactively edit passages
 
 ## Release
 

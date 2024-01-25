@@ -132,12 +132,10 @@ export class Game {
 	async load(onLoad?: ProgressCallback) {
 		Assets.init();
 
-		// parse .strand and .glsl as plaintext
+		// parse .glsl as plaintext
 		const loadTextTest = loadTxt.test;
 		loadTxt.test = (url) =>
-			loadTextTest?.(url) ||
-			utils.path.extname(url).includes('.strand') ||
-			utils.path.extname(url).includes('.glsl');
+			loadTextTest?.(url) || utils.path.extname(url).includes('.glsl');
 		extensions.add(HowlerLoaderParser);
 
 		// load assets list
@@ -222,27 +220,6 @@ export class Game {
 			};
 			reload = async () => {
 				music(playing.music, { ...playing, fade: 0, restart: true });
-			};
-		}
-		if (scene && asset.includes('.strand')) {
-			unload = async () => {
-				scene.strand.history.push(scene.strand.currentPassage.title);
-			};
-			reload = async () => {
-				scene.strand.setSource(
-					resource<string>(`main-${scene.strand.language || 'en'}`) || ''
-				);
-				if (scene.strand.currentPassage?.title) {
-					await new Promise<void>((r) => {
-						requestAnimationFrame(() => {
-							requestAnimationFrame(() => {
-								if (!scene) return;
-								scene.strand.back();
-								r();
-							});
-						});
-					});
-				}
 			};
 		}
 
