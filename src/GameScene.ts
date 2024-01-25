@@ -1,9 +1,11 @@
+import eases from 'eases';
 import {
 	BitmapText,
 	Container,
 	DisplayObject,
 	Graphics,
 	SCALE_MODES,
+	Sprite,
 } from 'pixi.js';
 import { Area } from './Area';
 import { Border } from './Border';
@@ -12,8 +14,11 @@ import { game } from './Game';
 import { GameObject } from './GameObject';
 import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
-import { TweenManager } from './Tweens';
+import { Updater } from './Scripts/Updater';
+import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
+import { size } from './config';
+import { tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -41,6 +46,8 @@ export class GameScene {
 
 	area?: string;
 
+	sprPortrait: Sprite;
+
 	get currentArea() {
 		return this.areas[this.area || ''];
 	}
@@ -58,6 +65,9 @@ export class GameScene {
 	}
 
 	focusAmt = 0.8;
+
+	portraitBump = 0;
+	portraitBumpTween?: Tween;
 
 	constructor() {
 		const bgs = [
@@ -92,6 +102,21 @@ export class GameScene {
 		this.take(this.border);
 		this.take(this.camera);
 
+		this.sprPortrait = new Sprite(tex('portrait'));
+		this.container.addChild(this.sprPortrait);
+		this.sprPortrait.x -= size.x / 2 - 50;
+		this.sprPortrait.y -= size.y / 2 - 50;
+
+		this.border.scripts.push(
+			new Updater(this.border, () => {
+				this.sprPortrait.anchor.y =
+					Math.sin(Date.now() * 0.005) * 0.025 + this.portraitBump;
+				this.sprPortrait.angle =
+					(eases.bounceInOut(Math.cos(Date.now() * 0.005) * 0.5 + 0.5) - 0.5) *
+					5;
+			})
+		);
+
 		this.screenFilter = new ScreenFilter();
 
 		this.camera.display.container.addChild(this.container);
@@ -125,6 +150,7 @@ export class GameScene {
 		};
 		const key = event.key;
 		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
+		if (!type) return;
 		if (type === 'Backspace') {
 			this.textInput.text = this.textInput.text.substring(
 				0,
@@ -132,6 +158,10 @@ export class GameScene {
 			);
 		} else {
 			this.textInput.text += type;
+			if (this.portraitBumpTween) TweenManager.abort(this.portraitBumpTween);
+			this.portraitBump = 0.1;
+			// @ts-expect-error weird `this` thing
+			this.portraitBumpTween = TweenManager.tween(this, 'portraitBump', 0, 100);
 		}
 	};
 
