@@ -49,6 +49,7 @@ export class TextInput extends GameObject {
 				i.tint = 0xbbbbbb;
 			} else if (this.strCurrent[idx] !== this.strTarget[idx]) {
 				i.text = this.strCurrent[idx];
+				if (i.text === ' ') i.text = '_';
 				i.tint = 0xff0000;
 			} else {
 				i.tint = 0xffffff;
