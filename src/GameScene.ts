@@ -1,6 +1,5 @@
 import eases from 'eases';
 import {
-	BitmapText,
 	Container,
 	DisplayObject,
 	Graphics,
@@ -15,6 +14,7 @@ import { GameObject } from './GameObject';
 import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { Updater } from './Scripts/Updater';
+import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
@@ -68,6 +68,8 @@ export class GameScene {
 
 	portraitBump = 0;
 	portraitBumpTween?: Tween;
+
+	textInput: TextInput;
 
 	constructor() {
 		const bgs = [
@@ -133,12 +135,9 @@ export class GameScene {
 			capture: true,
 		});
 
-		this.textInput = new BitmapText('the ', {
-			fontName: 'bmfont',
-			align: 'center',
-		});
-		this.textInput.anchor.x = 0.5;
-		this.container.addChild(this.textInput);
+		this.textInput = new TextInput();
+		this.textInput.setTarget('Sphinx of black quartz, hear my vow!');
+		this.container.addChild(this.textInput.display.container);
 	}
 
 	onInput = (event: KeyboardEvent) => {
@@ -160,20 +159,20 @@ export class GameScene {
 		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
 		if (!type) return;
 		if (type === 'Backspace') {
-			this.textInput.text = this.textInput.text.substring(
-				0,
-				this.textInput.text.length - 1
+			this.textInput.setCurrent(
+				this.textInput.strCurrent.substring(
+					0,
+					this.textInput.strCurrent.length - 1
+				)
 			);
 		} else {
-			this.textInput.text += type;
+			this.textInput.setCurrent(`${this.textInput.strCurrent}${type}`);
 			if (this.portraitBumpTween) TweenManager.abort(this.portraitBumpTween);
 			this.portraitBump = 0.1;
 			// @ts-expect-error weird `this` thing
 			this.portraitBumpTween = TweenManager.tween(this, 'portraitBump', 0, 100);
 		}
 	};
-
-	textInput: BitmapText;
 
 	destroy(): void {
 		if (this.currentArea) {
