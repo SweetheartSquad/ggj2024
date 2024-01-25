@@ -86,9 +86,48 @@ export class GameScene {
 
 		this.camera.display.container.addChild(this.container);
 
+		document.addEventListener('keydown', this.onInput, {
+			capture: true,
+		});
+
+		this.textInput = new BitmapText('the ', {
+			fontName: 'bmfont',
+			align: 'center',
+		});
+		this.textInput.anchor.x = 0.5;
+		this.container.addChild(this.textInput);
 
 		this.border.display.container.alpha = 0;
 	}
+
+	onInput = (event: KeyboardEvent) => {
+		const keyReplacements: { [key: string]: string | undefined } = {
+			// backspace needs special handling
+			Backspace: 'Backspace',
+			// might as well
+			Delete: 'Backspace',
+			'`': "'",
+			// not in font
+			'~': '',
+			'[': '',
+			']': '',
+			'{': '',
+			'}': '',
+			'|': '',
+		};
+		const key = event.key;
+		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
+		if (type === 'Backspace') {
+			this.textInput.text = this.textInput.text.substring(
+				0,
+				this.textInput.text.length - 1
+			);
+		} else {
+			this.textInput.text += type;
+		}
+	};
+
+	textInput: BitmapText;
 
 	destroy(): void {
 		if (this.currentArea) {
