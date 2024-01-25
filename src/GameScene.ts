@@ -106,8 +106,6 @@ export class GameScene {
 		});
 		this.textInput.anchor.x = 0.5;
 		this.container.addChild(this.textInput);
-
-		this.border.display.container.alpha = 0;
 	}
 
 	onInput = (event: KeyboardEvent) => {
