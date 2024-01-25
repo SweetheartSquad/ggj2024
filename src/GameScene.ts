@@ -73,9 +73,9 @@ export class GameScene {
 				update() {
 					const speed = 100; // TODO: speed based on typing
 					bgParallax.spr.tilePosition.x =
-						((Date.now() - start) / 1000) * speed * bgParallax.mult;
+						((Date.now() - start) / 1000) * speed * bgParallax.mult[0];
 					bgParallax.spr.tilePosition.y =
-						((Date.now() - start) / 1000) * speed * bgParallax.mult;
+						((Date.now() - start) / 1000) * speed * bgParallax.mult[1];
 				},
 			});
 		});

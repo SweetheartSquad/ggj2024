@@ -1,11 +1,11 @@
 import { SCALE_MODES, TilingSprite } from 'pixi.js';
-import { size } from './config';
 import { GameObject } from './GameObject';
 import { Animator } from './Scripts/Animator';
 import { Display } from './Scripts/Display';
 import { Transform } from './Scripts/Transform';
-import { tex } from './utils';
 import { V } from './VMath';
+import { size } from './config';
+import { tex } from './utils';
 
 export class PropParallax extends GameObject {
 	spr: TilingSprite;
@@ -16,7 +16,7 @@ export class PropParallax extends GameObject {
 
 	display: Display;
 
-	mult: number;
+	mult: [number, number];
 
 	tileOffset: V;
 
@@ -44,7 +44,7 @@ export class PropParallax extends GameObject {
 		flip?: boolean;
 		animate?: boolean;
 		offset?: number;
-		mult?: number;
+		mult?: number | [number, number];
 		freq?: number;
 	}) {
 		super();
@@ -80,7 +80,7 @@ export class PropParallax extends GameObject {
 		this.spr.y -= offset;
 		this.transform.y += offset;
 
-		this.mult = mult;
+		this.mult = typeof mult === 'number' ? [mult, mult] : mult;
 		this.tileOffset = {
 			x,
 			y,
@@ -95,9 +95,9 @@ export class PropParallax extends GameObject {
 		this.transform.x = camera.display.container.pivot.x;
 		this.transform.y = camera.display.container.pivot.y + this.offset;
 		this.spr.tilePosition.x =
-			-camera.display.container.pivot.x * this.mult + this.tileOffset.x;
+			-camera.display.container.pivot.x * this.mult[0] + this.tileOffset.x;
 		this.spr.tilePosition.y =
-			-camera.display.container.pivot.y * this.mult + this.tileOffset.y;
+			-camera.display.container.pivot.y * this.mult[1] + this.tileOffset.y;
 		super.update();
 	}
 }
