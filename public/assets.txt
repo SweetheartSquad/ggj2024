@@ -10,11 +10,13 @@ textures/white.png
 textures/blank.png
 textures/ditherGrid.png
 textures/border.png
-textures/dialogueBg.png
 textures/shadows.png
 
 textures/img_cheryl.jpg
 textures/hive.1.webp
+
+textures/dialogueBg.x3.png
+
 
 audio/bgm.mp3
 audio/voiceDefault.mp3
