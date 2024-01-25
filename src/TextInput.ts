@@ -46,6 +46,8 @@ export class TextInput extends GameObject {
 		this.strCurrent = str;
 		this.text.forEach((i, idx) => {
 			i.text = this.strTarget[idx];
+			i.anchor.x = 0;
+			i.anchor.y = 0;
 			if (this.strCurrent.length === idx) {
 				i.tint = 0x00ff00;
 			} else if (this.strCurrent.length <= idx) {
@@ -72,7 +74,18 @@ export class TextInput extends GameObject {
 	update() {
 		const t = game.app.ticker.lastTime;
 		this.text.forEach((i, idx) => {
-			i.y = Math.sin(t * 0.01 + idx * 0.5) * 5;
+			if (
+				this.strCurrent.length > idx &&
+				this.strCurrent[idx] !== this.strTarget[idx]
+			) {
+				i.y = 0;
+				i.anchor.x = (Math.random() - 0.5) * 0.1;
+				i.anchor.y = (Math.random() - 0.5) * 0.1;
+			} else if (this.strCurrent.length > idx) {
+				i.y = Math.sin(t * 0.01 + idx * 0.5) * 4;
+			} else {
+				i.y = Math.sin(t * 0.01 + idx * 0.5) * 2;
+			}
 		});
 		const padding = 10;
 		this.sprScrim.x = this.display.container.x - padding;
