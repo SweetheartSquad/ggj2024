@@ -22,4 +22,5 @@ textures/textBg.png
 textures/neutral.x4.png
 textures/surprise.x3.png
 textures/starmouth.x4.png
+textures/lookAround.x4.png
 textures/emptyFrame.png
