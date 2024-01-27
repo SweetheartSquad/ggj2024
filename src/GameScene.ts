@@ -8,7 +8,7 @@ import {
 	Sprite,
 } from 'pixi.js';
 import { Area } from './Area';
-import { music } from './Audio';
+import { music, sfx } from './Audio';
 import { Border } from './Border';
 import { Camera } from './Camera';
 import { Foot } from './Foot';
@@ -18,6 +18,7 @@ import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { Animator } from './Scripts/Animator';
 import { Updater } from './Scripts/Updater';
+import { Sounds, randomSound } from './Sounds';
 import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
@@ -231,9 +232,13 @@ export class GameScene {
 
 	async doRun() {
 		this.animatorFace.setAnimation('neutral');
+		sfx("countdownCount");
 		await this.say('3');
+		sfx("countdownCount");
 		await this.say('2');
+		sfx("countdownCount");
 		await this.say('1');
+		sfx("countdownGo");
 		this.say('GO!');
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			shuffle(lines)[0]
@@ -349,6 +354,9 @@ export class GameScene {
 	canBeHappy = true;
 	canBeHappyTimeout = 0;
 
+	canPlayGoodBadSound = true;
+	canPlayGoodBadSoundTimeout = 0;
+
 	onInput = (event: KeyboardEvent) => {
 		if (this.waiting) return;
 		const keyReplacements: { [key: string]: string | undefined } = {
@@ -368,10 +376,19 @@ export class GameScene {
 		const key = event.key;
 		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
 		if (!type) return;
+
+		const wasRight = this.textInput.isRight();
+
 		if (type === 'Backspace') {
 			this.textInput.backspace();
 		} else {
+
 			this.textInput.addCurrent(type);
+
+			if (!this.textInput.isRight() && wasRight) {
+				clearTimeout(this.canPlayGoodBadSoundTimeout);
+				this.canPlayGoodBadSound = true;
+			}
 
 			// update visuals
 			this.bump();
@@ -380,14 +397,14 @@ export class GameScene {
 			if (this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
-						Math.floor(
-							lerp(
-								0,
-								happyFaces.length - 1,
-								this.textInput.strCurrent.length /
-									this.textInput.strTarget.length
-							) + 0.5
-						)
+					Math.floor(
+						lerp(
+							0,
+							happyFaces.length - 1,
+							this.textInput.strCurrent.length /
+							this.textInput.strTarget.length
+						) + 0.5
+					)
 					]
 				);
 				this.textPopup.text = shuffle([
@@ -400,6 +417,15 @@ export class GameScene {
 					'hee',
 					'teehee',
 				])[0];
+
+				if (this.canPlayGoodBadSound) {
+					randomSound(Sounds.Good);
+					this.canPlayGoodBadSound = false;
+					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
+						this.canPlayGoodBadSound = true;
+					}, 1000);
+				}
+
 			} else if (!this.textInput.isRight()) {
 				this.canBeHappy = false;
 				clearTimeout(this.canBeHappyTimeout);
@@ -415,7 +441,18 @@ export class GameScene {
 					'argh!',
 					'gahh!',
 				])[0];
+
+				if (this.canPlayGoodBadSound) {
+					randomSound(Sounds.Bad);
+					this.canPlayGoodBadSound = false;
+					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
+						this.canPlayGoodBadSound = true;
+					}, 1000);
+
+				}
 			}
+
+			randomSound(Sounds.Type);
 
 			let foot = 0;
 			let toe = -1;
