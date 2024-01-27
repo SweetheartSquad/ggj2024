@@ -450,7 +450,10 @@ export class GameScene {
 				}
 			}
 
-			randomSound(Sounds.Type);
+			sfx('type', {
+				rate: 1 + ((type.codePointAt(0) ?? 0) % 26) / 26,
+				volume: Math.random() * 0.25 + 1,
+			});
 
 			let foot = 0;
 			let toe = -1;

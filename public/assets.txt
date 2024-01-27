@@ -11,15 +11,7 @@ textures/border.png
 
 audio/bgm.mp3
 
-audio/type0.mp3
-audio/type1.mp3
-audio/type2.mp3
-audio/type3.mp3
-audio/type4.mp3
-audio/type5.mp3
-audio/type6.mp3
-audio/type7.mp3
-audio/type8.mp3
+audio/type.mp3
 
 audio/good0.mp3
 audio/good1.mp3

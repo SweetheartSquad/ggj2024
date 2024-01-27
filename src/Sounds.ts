@@ -2,7 +2,6 @@ import { getHowl, sfx } from './Audio';
 import { randRange } from './utils';
 
 export enum Sounds {
-	Type = 9,
 	Good = 13,
 	Bad = 14,
 }
