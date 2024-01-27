@@ -35,6 +35,8 @@ textures/foot/toe3.x2.png
 textures/foot/toe4.x2.png
 textures/foot/foot.png
 
+textures/background/background.x12.png
+
 textures/clockHands.png
 textures/clockBody.png
 
