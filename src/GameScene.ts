@@ -4,6 +4,7 @@ import {
 	Container,
 	DisplayObject,
 	Graphics,
+	NineSlicePlane,
 	SCALE_MODES,
 	Sprite,
 } from 'pixi.js';
@@ -141,6 +142,20 @@ export class GameScene {
 				freq: 1 / 200,
 			})
 		);
+		const texBorder = tex('border');
+		const spr = new NineSlicePlane(
+			texBorder,
+			texBorder.width / 3,
+			texBorder.height / 3,
+			texBorder.width / 3,
+			texBorder.height / 3
+		);
+		spr.name = 'border';
+		spr.width = bg.width;
+		spr.height = bg.height;
+		spr.x -= spr.width / 2;
+		spr.y -= spr.height / 2;
+		this.container.addChild(spr);
 
 		this.sprPortrait = new Sprite(tex('emptyFrame'));
 		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
