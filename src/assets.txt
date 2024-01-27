@@ -1,7 +1,0 @@
-textures/error.png
-textures/black.png
-textures/white.png
-textures/blank.png
-textures/dialogueBg.x3.png
-textures/blue_301AB6.png
-textures/pink_B72AC8.png
