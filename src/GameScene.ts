@@ -657,10 +657,6 @@ export class GameScene {
 		this.sprFeather.pivot.y = Math.sin(curTime * 0.005) * 5;
 		this.sprFeather.pivot.x = Math.sin(curTime * 0.0025) * 5;
 
-		// depth sort
-		// this.sortScene();
-		// this.container.addChild(this.graphics);
-
 		this.screenFilter.update();
 
 		GameObject.update();
