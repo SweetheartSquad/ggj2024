@@ -128,6 +128,10 @@ export class GameScene {
 		this.take(this.border);
 		this.take(this.camera);
 
+		const vignette = new Sprite(tex('vignette'));
+		vignette.anchor.x = vignette.anchor.y = 0.5;
+		this.container.addChild(vignette);
+
 		const bg = new Sprite(tex('background'));
 		bg.anchor.x = bg.anchor.y = 0.5;
 		this.container.addChild(bg);
@@ -138,9 +142,6 @@ export class GameScene {
 			})
 		);
 
-		const vignette = new Sprite(tex('vignette'));
-		vignette.anchor.x = vignette.anchor.y = 0.5;
-		this.container.addChild(vignette);
 		this.sprPortrait = new Sprite(tex('emptyFrame'));
 		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
 		this.sprFace = new Sprite(tex('neutral'));
