@@ -1,3 +1,4 @@
+import eases from 'eases';
 import { Rectangle, Texture, WRAP_MODES } from 'pixi.js';
 import { CustomFilter } from './CustomFilter';
 import { game, resource } from './Game';
@@ -53,7 +54,7 @@ export class ScreenFilter extends CustomFilter<Uniforms> {
 	flash(
 		colour: [number, number, number] | [number, number, number, number],
 		duration: number,
-		ease: (t: number) => number
+		ease: (t: number) => number = eases.linear
 	) {
 		this.tweenFlash.forEach((i) => TweenManager.abort(i));
 		this.tweenFlash.length = 0;
