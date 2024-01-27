@@ -25,6 +25,7 @@ textures/faces/smile.x5.png
 textures/faces/starmouth.x6.png
 textures/faces/lookAround.x4.png
 textures/faces/laugh.x9.png
+textures/faces/laughCry.x8.png
 textures/emptyFrame.png
 
 textures/foot/toe0.x2.png
