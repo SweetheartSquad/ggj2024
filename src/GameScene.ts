@@ -280,7 +280,15 @@ export class GameScene {
 			this.textInput.addCurrent(type);
 			this.bump();
 			this.animatorFace.setAnimation(
-				shuffle(['neutral', 'surprise', 'smile', 'starmouth', 'lookAround'])[0]
+				shuffle([
+					'neutral',
+					'surprise',
+					'smile',
+					'starmouth',
+					'lookAround',
+					'laugh',
+					'laughCry',
+				])[0]
 			);
 			this.textPopup.text = shuffle([
 				'oh',
