@@ -8,7 +8,7 @@ import {
 	Sprite,
 } from 'pixi.js';
 import { Area } from './Area';
-import { music } from './Audio';
+import { music, sfx } from './Audio';
 import { Border } from './Border';
 import { Camera } from './Camera';
 import { Foot } from './Foot';
@@ -18,13 +18,14 @@ import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { Animator } from './Scripts/Animator';
 import { Updater } from './Scripts/Updater';
+import { randomSound } from './Sounds';
 import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
 import { fontDialogue } from './font';
-import { lines } from './lines';
-import { delay, lerp, shuffle, tex } from './utils';
+import { getLine } from './lines';
+import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -82,6 +83,10 @@ export class GameScene {
 
 	textInput: TextInput;
 	feet: [Foot, Foot];
+	sprFeather: Sprite;
+	tweenFeatherX?: Tween;
+	tweenFeatherY?: Tween;
+	tweenFeatherA?: Tween;
 
 	constructor() {
 		const bgs = [
@@ -156,6 +161,10 @@ export class GameScene {
 		this.feet[1].transform.x = -this.feet[1].display.container.width * 0.55;
 		this.take(this.feet[0]);
 		this.take(this.feet[1]);
+		this.sprFeather = new Sprite(tex('feather'));
+		this.sprFeather.anchor.x = 0.2;
+		this.sprFeather.anchor.y = 0.8;
+		this.container.addChild(this.sprFeather);
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
@@ -190,34 +199,36 @@ export class GameScene {
 		this.textInput = new TextInput();
 		this.container.addChild(this.textInput.sprScrim);
 		this.container.addChild(this.textInput.display.container);
-		this.textInput.display.container.y = size.y / 2 - 93 / 2 - 45;
 
 		music('bgm');
 		this.init();
 	}
 
 	async init() {
-		this.textInput.display.container.alpha = 0;
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		await this.say('hello');
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.say('type "start" to tickle my feet');
-		this.textInput.display.container.alpha = 1;
 		{
 			let { errors } = await this.requireSequence('start');
 			this.textInput.setTarget('');
 			this.textInput.clearCurrent();
 			if (errors) {
+				sfx(`bad0`, { rate: Math.random() * 0.5 + 1.5 });
 				this.animatorFace.setAnimation('neutral');
 				this.say('oops! not quite, try that again');
 				errors = (await this.requireSequence('start')).errors;
 				this.textInput.setTarget('');
 				this.textInput.clearCurrent();
 				if (errors) {
+					sfx(`bad4`, { rate: Math.random() * 0.5 + 1.5 });
 					this.animatorFace.setAnimation('surprise');
 					this.say('hmm, you seem a little rusty?');
 					errors = (await this.requireSequence('start')).errors;
 					this.textInput.setTarget('');
 					this.textInput.clearCurrent();
 					if (errors) {
+						sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 						this.animatorFace.setAnimation('surprise');
 						await this.say('ugh fine, whatever');
 						await this.say("i guess you'll have to do");
@@ -230,14 +241,49 @@ export class GameScene {
 	}
 
 	async doRun() {
+		const sprClockHands = new Sprite(tex('clockHands'));
+		const sprClockBody = new Sprite(tex('clockBody'));
+		sprClockHands.x = sprClockBody.x = size.x / 2 - 140;
+		sprClockHands.y = sprClockBody.y = -size.y / 2 + 140;
+		sprClockHands.anchor.x =
+			sprClockHands.anchor.y =
+			sprClockBody.anchor.x =
+			sprClockBody.anchor.y =
+				0.5;
+		this.container.addChild(sprClockBody);
+		this.container.addChild(sprClockHands);
+		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 		this.animatorFace.setAnimation('neutral');
+		this.textInput.setTarget('');
+		sfx('countdown3');
 		await this.say('3');
+		sprClockHands.alpha = sprClockBody.alpha = 0.5;
+		sfx('countdown2');
 		await this.say('2');
+		sprClockHands.alpha = sprClockBody.alpha = 0.75;
+		sfx('countdown1');
 		await this.say('1');
+		sprClockHands.alpha = sprClockBody.alpha = 1;
+		const start = game.app.ticker.lastTime;
+		const spinner = new Updater(this.border, () => {
+			sprClockBody.angle =
+				((game.app.ticker.lastTime - start) / 1000 / 60) * 360;
+		});
+		this.border.scripts.push(spinner);
+		sfx('countdownGo');
 		this.say('GO!');
+		this.reacting = true;
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
-			shuffle(lines)[0]
+			getLine()
 		);
+		this.reacting = false;
+
+		sfx('endBuzzer');
+
+		sprClockHands.destroy();
+		sprClockBody.destroy();
+		removeFromArray(this.border.scripts, spinner);
+		spinner.destroy?.();
 
 		this.sprPopup.scale.x = 2;
 		this.sprPopup.scale.y = 2;
@@ -245,9 +291,14 @@ export class GameScene {
 
 		if (errors === 0) {
 			this.animatorFace.setAnimation('laughCry');
+			setTimeout(() => {
+				this.textInput.setTarget('');
+			}, 1000);
+			sfx(`good12`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
 			);
+			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
 					wpm
@@ -257,9 +308,14 @@ export class GameScene {
 			);
 		} else if (errors <= 5) {
 			this.animatorFace.setAnimation('laugh');
+			setTimeout(() => {
+				this.textInput.setTarget('');
+			}, 1000);
+			sfx(`good11`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wow, my feet are feelin' fly! but could you do better next time?`
 			);
+			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
 					wpm
@@ -269,9 +325,14 @@ export class GameScene {
 			);
 		} else {
 			this.animatorFace.setAnimation('neutral');
+			setTimeout(() => {
+				this.textInput.setTarget('');
+			}, 1000);
+			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
 			);
+			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
 					wpm
@@ -289,7 +350,9 @@ export class GameScene {
 				this.textPopup.fontSize = fontDialogue.fontSize;
 				if (errors) {
 					this.animatorFace.setAnimation('neutral');
+					sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 					await this.say('seriously?');
+					sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 					this.say('type "restart" to try again');
 					check();
 				} else {
@@ -303,10 +366,12 @@ export class GameScene {
 
 	waiting = true;
 
+	reacting = false;
+
 	async say(text: string) {
 		this.textPopup.text = text;
 		this.bump();
-		await delay(Math.max(800, text.length * 100));
+		await delay(Math.max(800, text.length * 80));
 	}
 
 	async requireSequence(text: string) {
@@ -349,6 +414,9 @@ export class GameScene {
 	canBeHappy = true;
 	canBeHappyTimeout = 0;
 
+	canPlayGoodBadSound = true;
+	canPlayGoodBadSoundTimeout = 0;
+
 	onInput = (event: KeyboardEvent) => {
 		if (this.waiting) return;
 		const keyReplacements: { [key: string]: string | undefined } = {
@@ -372,12 +440,30 @@ export class GameScene {
 			this.textInput.backspace();
 		} else {
 			this.textInput.addCurrent(type);
+			if (this.textInput.strTarget[this.textInput.strCurrent.length] === ' ') {
+				this.canPlayGoodBadSound = true;
+
+				if (
+					this.reacting &&
+					this.textInput.strCurrent.endsWith(
+						this.textInput.strTarget
+							.substring(0, this.textInput.strCurrent.length)
+							.split(' ')
+							.pop() || ''
+					)
+				) {
+					const [idx, text] = randomSound('good');
+					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
+					this.screenFilter.flash([1, 1, 1, 0.05], 150);
+					this.textPopup.text = text;
+				}
+			}
 
 			// update visuals
 			this.bump();
 			const happyFaces = ['neutral', 'smile', 'laugh', 'laughCry'];
 			const madFaces = ['starmouth', 'surprise', 'lookAround'];
-			if (this.textInput.isRight() && this.canBeHappy) {
+			if (this.reacting && this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
 						Math.floor(
@@ -390,17 +476,7 @@ export class GameScene {
 						)
 					]
 				);
-				this.textPopup.text = shuffle([
-					'oh',
-					'ohh',
-					'ohh',
-					'ah',
-					'hehe',
-					'haha',
-					'hee',
-					'teehee',
-				])[0];
-			} else if (!this.textInput.isRight()) {
+			} else if (this.reacting && !this.textInput.isRight()) {
 				this.canBeHappy = false;
 				clearTimeout(this.canBeHappyTimeout);
 				this.canBeHappyTimeout = window.setTimeout(() => {
@@ -408,14 +484,20 @@ export class GameScene {
 					this.canBeHappyTimeout = 0;
 				}, 1000);
 				this.animatorFace.setAnimation(shuffle(madFaces)[0]);
-				this.textPopup.text = shuffle([
-					'no!',
-					'wrong!',
-					'stop!',
-					'argh!',
-					'gahh!',
-				])[0];
+
+				if (this.canPlayGoodBadSound) {
+					const [idx, text] = randomSound('bad');
+					sfx(`bad${idx}`, { rate: Math.random() * 0.5 + 1.5 });
+					this.screenFilter.flash([1, 0, 0, 0.1], 150);
+					this.textPopup.text = text;
+					this.canPlayGoodBadSound = false;
+				}
 			}
+
+			sfx('type', {
+				rate: 1 + ((type.codePointAt(0) ?? 0) % 26) / 26,
+				volume: Math.random() * 0.25 + 1,
+			});
 
 			let foot = 0;
 			let toe = -1;
@@ -516,6 +598,49 @@ export class GameScene {
 			}
 			if (toe >= 0) {
 				this.feet[foot].curl(toe);
+				const [x, y] = [
+					[
+						[-110, 120],
+						[-240, 110],
+						[-310, 140],
+						[-340, 200],
+						[-390, 260],
+					],
+					[
+						[110, 120],
+						[240, 110],
+						[310, 140],
+						[340, 200],
+						[390, 260],
+					],
+				][foot][toe];
+				if (this.tweenFeatherX) TweenManager.abort(this.tweenFeatherX);
+				if (this.tweenFeatherY) TweenManager.abort(this.tweenFeatherY);
+				if (this.tweenFeatherA) TweenManager.abort(this.tweenFeatherA);
+				this.tweenFeatherX = TweenManager.tween(
+					this.sprFeather,
+					'x',
+					x - this.sprFeather.width * (1 - this.sprFeather.anchor.x),
+					150,
+					undefined,
+					eases.circInOut
+				);
+				this.tweenFeatherY = TweenManager.tween(
+					this.sprFeather,
+					'y',
+					y + this.sprFeather.height * (1 - this.sprFeather.anchor.y),
+					150,
+					undefined,
+					eases.circInOut
+				);
+				this.tweenFeatherA = TweenManager.tween(
+					this.sprFeather,
+					'angle',
+					0,
+					300,
+					1,
+					(t) => Math.sin(t * Math.PI * 2 * 3 + Math.PI) * 20 * eases.backOut(t)
+				);
 			}
 		}
 	};
@@ -546,11 +671,8 @@ export class GameScene {
 	update(): void {
 		const curTime = game.app.ticker.lastTime;
 
-		// depth sort
-		// this.sortScene();
-		// this.container.addChild(this.graphics);
-
-		this.screenFilter.update();
+		this.sprFeather.pivot.y = Math.sin(curTime * 0.005) * 5;
+		this.sprFeather.pivot.x = Math.sin(curTime * 0.0025) * 5;
 
 		GameObject.update();
 		TweenManager.update();

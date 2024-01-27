@@ -4,6 +4,7 @@ import { game } from './Game';
 import { GameObject } from './GameObject';
 import { Display } from './Scripts/Display';
 import { Tween, TweenManager } from './Tweens';
+import { size } from './config';
 import { fontInput } from './font';
 import { tex } from './utils';
 
@@ -25,6 +26,8 @@ export class TextInput extends GameObject {
 
 	tweenX?: Tween;
 
+	tweenY?: Tween;
+
 	constructor() {
 		super();
 		this.scripts.push((this.display = new Display(this)));
@@ -37,6 +40,7 @@ export class TextInput extends GameObject {
 			0
 		);
 		padding.x = texScrim.baseTexture.width / 4;
+		this.display.container.y = this.getY2();
 	}
 
 	setTarget(str: string) {
@@ -56,12 +60,33 @@ export class TextInput extends GameObject {
 		});
 		this.display.container.x = -this.display.container.width / 2;
 		this.sprScrim.width = this.display.container.width + padding.x * 2;
-		this.sprScrim.height = this.display.container.height + padding.y;
+		this.sprScrim.height =
+			Math.max(this.display.container.height, 32) + padding.y;
 		this.clearCurrent();
+
+		if (this.tweenY) TweenManager.abort(this.tweenY);
+		this.tweenY = TweenManager.tween(
+			this.display.container,
+			'y',
+			str ? this.getY1() : this.getY2(),
+			400,
+			undefined,
+			str ? eases.backOut : eases.backIn
+		);
 	}
 
 	getX() {
 		return 0 - (this.text[this.strCurrent.length - 1]?.x ?? 0);
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	getY1() {
+		return size.y / 2 - 93 / 2 - 45;
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	getY2() {
+		return size.y / 2 + 93;
 	}
 
 	clearCurrent() {
