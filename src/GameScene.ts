@@ -205,7 +205,9 @@ export class GameScene {
 		await this.say(
 			`wow that was ${timeTakenInSeconds.toFixed(2)}s with ${errors} mistakes!`
 		);
-		await this.say(`you've got a tpm (tickle per minute) of ${wpm}!`);
+		await this.say(
+			`you've got a tpm (tickle per minute) of ${Math.round(wpm)}!`
+		);
 	}
 
 	waiting = true;
@@ -278,7 +280,15 @@ export class GameScene {
 			this.textInput.addCurrent(type);
 			this.bump();
 			this.animatorFace.setAnimation(
-				shuffle(['neutral', 'surprise', 'smile', 'starmouth', 'lookAround'])[0]
+				shuffle([
+					'neutral',
+					'surprise',
+					'smile',
+					'starmouth',
+					'lookAround',
+					'laugh',
+					'laughCry',
+				])[0]
 			);
 			this.textPopup.text = shuffle([
 				'oh',
