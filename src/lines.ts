@@ -15,7 +15,7 @@ export function getLine() {
 	let line = '';
 	do{
 		line = shuffle(lines)[0];
-	} while (!line.startsWith(lastLine));
+	} while (line.startsWith(lastLine));
 	lastLine = line.substring(0, 10);
 	return line;
 }
