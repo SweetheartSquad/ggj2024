@@ -13,3 +13,8 @@ export const fontDialogue: Partial<IBitmapTextStyle> = {
 	fontSize: 32,
 	maxWidth: 400,
 };
+
+export const fontCombo: Partial<IBitmapTextStyle> = {
+	fontName: 'bmfont',
+	align: 'left',
+};

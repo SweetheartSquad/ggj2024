@@ -23,7 +23,7 @@ import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
-import { fontDialogue } from './font';
+import { fontCombo, fontDialogue } from './font';
 import { getLine } from './lines';
 import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
 
@@ -59,6 +59,9 @@ export class GameScene {
 	sprPortrait2: Sprite;
 	sprPopup: Sprite;
 	textPopup: BitmapText;
+
+	combo: number = 0;
+	textCombo: BitmapText;
 
 	get currentArea() {
 		return this.areas[this.area || ''];
@@ -166,6 +169,24 @@ export class GameScene {
 		this.sprFeather.anchor.y = 0.8;
 		this.container.addChild(this.sprFeather);
 
+		this.combo = 0;
+		this.textCombo = new BitmapText(``, fontCombo);
+		this.container.addChild(this.textCombo);
+		this.textCombo.x = size.x / 2 - 170;
+		this.textCombo.y = -size.y / 2 + 260;
+
+		this.border.scripts.push(
+			new Updater(this.border, () => {
+				if (this.combo) {
+					this.textCombo.text = `x${this.combo}${'!'.repeat(
+						Math.floor(this.combo / 10)
+					)}`;
+				} else {
+					this.textCombo.text = '';
+				}
+			})
+		);
+
 		this.border.scripts.push(
 			new Updater(this.border, () => {
 				this.sprPortrait.anchor.y =
@@ -253,6 +274,9 @@ export class GameScene {
 		this.container.addChild(sprClockBody);
 		this.container.addChild(sprClockHands);
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
+
+		this.combo = 0;
+
 		this.animatorFace.setAnimation('neutral');
 		this.textInput.setTarget('');
 		sfx('countdown3');
@@ -284,6 +308,7 @@ export class GameScene {
 		removeFromArray(this.border.scripts, spinner);
 		spinner.destroy?.();
 		this.say(`that's it!`);
+		this.combo = 0;
 		await delay(2000);
 
 		this.sprPopup.scale.x = 2;
@@ -451,6 +476,7 @@ export class GameScene {
 					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
 					this.screenFilter.flash([1, 1, 1, 0.05], 150);
 					this.textPopup.text = text;
+					++this.combo;
 				}
 			}
 
@@ -486,6 +512,7 @@ export class GameScene {
 					this.screenFilter.flash([1, 0, 0, 0.1], 150);
 					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
+					this.combo = 0;
 				}
 			}
 
