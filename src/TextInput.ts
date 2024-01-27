@@ -135,5 +135,6 @@ export class TextInput extends GameObject {
 		});
 		this.sprScrim.x = this.display.container.x - padding;
 		this.sprScrim.y = this.display.container.y - padding / 2;
+		this.sprScrim.alpha = this.display.container.alpha;
 	}
 }
