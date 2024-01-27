@@ -199,7 +199,13 @@ export class GameScene {
 		this.say('type "start" to tickle my feet');
 		this.textInput.display.container.alpha = 1;
 		await this.requireSequence('start');
-		await this.requireSequence(shuffle(lines)[0]);
+		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
+			shuffle(lines)[0]
+		);
+		await this.say(
+			`wow that was ${timeTakenInSeconds.toFixed(2)}s with ${errors} mistakes!`
+		);
+		await this.say(`you've got a tpm (tickle per minute) of ${wpm}!`);
 	}
 
 	waiting = true;
@@ -227,14 +233,16 @@ export class GameScene {
 			check();
 		});
 		const endTime = game.app.ticker.lastTime;
-		const timeTaken = endTime - startTime;
+		const timeTakenInSeconds = (endTime - startTime) / 1000;
 		const errors = this.textInput.strCurrent
 			.split('')
-			.filter((i, idx) => i !== this.textInput.strTarget[idx]);
+			.filter((i, idx) => i !== this.textInput.strTarget[idx]).length;
 		this.waiting = true;
+		const words = this.textInput.strTarget.length / 5;
 		return {
+			wpm: words / (timeTakenInSeconds / 60),
 			errors,
-			timeTaken,
+			timeTakenInSeconds,
 		};
 	}
 

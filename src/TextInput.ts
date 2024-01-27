@@ -7,7 +7,7 @@ import { Tween, TweenManager } from './Tweens';
 import { fontInput } from './font';
 import { tex } from './utils';
 
-const padding = 20;
+const padding = 60;
 const tintCurrent = 0x00ff00;
 const tintUpcoming = 0xbbbbbb;
 const tintWrong = 0xff0000;
@@ -25,7 +25,14 @@ export class TextInput extends GameObject {
 	constructor() {
 		super();
 		this.scripts.push((this.display = new Display(this)));
-		this.sprScrim = new NineSlicePlane(tex('textBg'));
+		const texScrim = tex('textBg');
+		this.sprScrim = new NineSlicePlane(
+			texScrim,
+			texScrim.baseTexture.width / 2,
+			0,
+			texScrim.baseTexture.width / 2,
+			0
+		);
 	}
 
 	setTarget(str: string) {
