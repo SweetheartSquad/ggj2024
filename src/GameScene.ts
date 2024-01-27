@@ -22,6 +22,7 @@ import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
 import { fontDialogue } from './font';
+import { lines } from './lines';
 import { delay, shuffle, tex } from './utils';
 
 function depthCompare(
@@ -198,7 +199,7 @@ export class GameScene {
 		this.say('type "start" to tickle my feet');
 		this.textInput.display.container.alpha = 1;
 		await this.requireSequence('start');
-		await this.requireSequence('Sphinx of black quartz, hear my vow!');
+		await this.requireSequence(shuffle(lines)[0]);
 	}
 
 	waiting = true;
