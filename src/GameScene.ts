@@ -18,7 +18,7 @@ import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { Animator } from './Scripts/Animator';
 import { Updater } from './Scripts/Updater';
-import { Sounds, cancelSound, randomSound } from './Sounds';
+import { randomSound } from './Sounds';
 import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
@@ -387,7 +387,6 @@ export class GameScene {
 			if (!this.textInput.isRight() && wasRight) {
 				clearTimeout(this.canPlayGoodBadSoundTimeout);
 				this.canPlayGoodBadSound = true;
-				cancelSound(Sounds.Good);
 			}
 
 			// update visuals
@@ -407,19 +406,11 @@ export class GameScene {
 						)
 					]
 				);
-				this.textPopup.text = shuffle([
-					'oh',
-					'ohh',
-					'ohh',
-					'ah',
-					'hehe',
-					'haha',
-					'hee',
-					'teehee',
-				])[0];
 
 				if (this.canPlayGoodBadSound) {
-					randomSound(Sounds.Good);
+					const [idx, text] = randomSound('good');
+					sfx(`good${idx}`);
+					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
 					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
 						this.canPlayGoodBadSound = true;
@@ -433,16 +424,11 @@ export class GameScene {
 					this.canBeHappyTimeout = 0;
 				}, 1000);
 				this.animatorFace.setAnimation(shuffle(madFaces)[0]);
-				this.textPopup.text = shuffle([
-					'no!',
-					'wrong!',
-					'stop!',
-					'argh!',
-					'gahh!',
-				])[0];
 
 				if (this.canPlayGoodBadSound) {
-					randomSound(Sounds.Bad);
+					const [idx, text] = randomSound('bad');
+					sfx(`bad${idx}`);
+					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
 					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
 						this.canPlayGoodBadSound = true;
