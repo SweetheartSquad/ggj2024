@@ -8,6 +8,7 @@ import {
 	Sprite,
 } from 'pixi.js';
 import { Area } from './Area';
+import { music } from './Audio';
 import { Border } from './Border';
 import { Camera } from './Camera';
 import { Foot } from './Foot';
@@ -191,6 +192,7 @@ export class GameScene {
 		this.container.addChild(this.textInput.display.container);
 		this.textInput.display.container.y = size.y / 2 - 93 / 2 - 45;
 
+		music('bgm');
 		this.init();
 	}
 
