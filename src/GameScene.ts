@@ -1,5 +1,6 @@
 import eases from 'eases';
 import {
+	BitmapText,
 	Container,
 	DisplayObject,
 	Graphics,
@@ -19,6 +20,7 @@ import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
+import { fontDialogue } from './font';
 import { shuffle, tex } from './utils';
 
 function depthCompare(
@@ -51,6 +53,8 @@ export class GameScene {
 	sprFace: Sprite;
 	animatorFace: Animator;
 	sprPortrait2: Sprite;
+	sprPopup: Sprite;
+	textPopup: BitmapText;
 
 	get currentArea() {
 		return this.areas[this.area || ''];
@@ -120,6 +124,20 @@ export class GameScene {
 		this.container.addChild(this.sprPortrait);
 		this.sprPortrait.x -= size.x / 2 - 50;
 		this.sprPortrait.y -= size.y / 2 - 50;
+		this.sprPopup = new Sprite(tex('dialogueBg'));
+		this.textPopup = new BitmapText('test', fontDialogue);
+		this.textPopup.y += 70;
+		this.textPopup.x += 170;
+		this.textPopup.anchor.x = 0.5;
+		this.sprPopup.addChild(this.textPopup);
+		this.sprPopup.x += this.sprPortrait.width;
+		this.sprPortrait.addChild(this.sprPopup);
+		this.border.scripts.push(
+			new Animator(this.border, {
+				spr: this.sprPopup,
+				freq: 1 / 200,
+			})
+		);
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
@@ -186,6 +204,16 @@ export class GameScene {
 			this.animatorFace.setAnimation(
 				shuffle(['neutral', 'surprise', 'smile', 'starmouth', 'lookAround'])[0]
 			);
+			this.textPopup.text = shuffle([
+				'oh',
+				'ohh',
+				'ohh',
+				'ah',
+				'hehe',
+				'haha',
+				'hee',
+				'teehee',
+			])[0];
 		}
 	};
 

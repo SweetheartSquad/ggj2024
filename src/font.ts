@@ -5,3 +5,10 @@ export const fontInput: Partial<IBitmapTextStyle> = {
 	align: 'center',
 	letterSpacing: 0,
 };
+
+export const fontDialogue: Partial<IBitmapTextStyle> = {
+	fontName: 'bmfont',
+	align: 'center',
+	letterSpacing: 0,
+	fontSize: 64,
+};
