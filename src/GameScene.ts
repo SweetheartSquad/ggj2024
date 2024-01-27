@@ -23,7 +23,7 @@ import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
-import { fontDialogue } from './font';
+import { fontCombo, fontDialogue } from './font';
 import { getLine } from './lines';
 import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
 
@@ -59,6 +59,9 @@ export class GameScene {
 	sprPortrait2: Sprite;
 	sprPopup: Sprite;
 	textPopup: BitmapText;
+
+	combo: number = 0;
+	textCombo: BitmapText;
 
 	get currentArea() {
 		return this.areas[this.area || ''];
@@ -128,6 +131,17 @@ export class GameScene {
 		const vignette = new Sprite(tex('vignette'));
 		vignette.anchor.x = vignette.anchor.y = 0.5;
 		this.container.addChild(vignette);
+
+		const bg = new Sprite(tex('background'));
+		bg.anchor.x = bg.anchor.y = 0.5;
+		this.container.addChild(bg);
+		this.border.scripts.push(
+			new Animator(this.border, {
+				spr: bg,
+				freq: 1 / 200,
+			})
+		);
+
 		this.sprPortrait = new Sprite(tex('emptyFrame'));
 		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
 		this.sprFace = new Sprite(tex('neutral'));
@@ -165,6 +179,24 @@ export class GameScene {
 		this.sprFeather.anchor.x = 0.2;
 		this.sprFeather.anchor.y = 0.8;
 		this.container.addChild(this.sprFeather);
+
+		this.combo = 0;
+		this.textCombo = new BitmapText(``, fontCombo);
+		this.container.addChild(this.textCombo);
+		this.textCombo.x = size.x / 2 - 170;
+		this.textCombo.y = -size.y / 2 + 260;
+
+		this.border.scripts.push(
+			new Updater(this.border, () => {
+				if (this.combo) {
+					this.textCombo.text = `x${this.combo}${'!'.repeat(
+						Math.floor(this.combo / 10)
+					)}`;
+				} else {
+					this.textCombo.text = '';
+				}
+			})
+		);
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
@@ -253,6 +285,9 @@ export class GameScene {
 		this.container.addChild(sprClockBody);
 		this.container.addChild(sprClockHands);
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
+
+		this.combo = 0;
+
 		this.animatorFace.setAnimation('neutral');
 		this.textInput.setTarget('');
 		sfx('countdown3');
@@ -279,11 +314,13 @@ export class GameScene {
 		this.reacting = false;
 
 		sfx('endBuzzer');
-
 		sprClockHands.destroy();
 		sprClockBody.destroy();
 		removeFromArray(this.border.scripts, spinner);
 		spinner.destroy?.();
+		this.say(`that's it!`);
+		this.combo = 0;
+		await delay(2000);
 
 		this.sprPopup.scale.x = 2;
 		this.sprPopup.scale.y = 2;
@@ -291,9 +328,7 @@ export class GameScene {
 
 		if (errors === 0) {
 			this.animatorFace.setAnimation('laughCry');
-			setTimeout(() => {
-				this.textInput.setTarget('');
-			}, 1000);
+			this.textInput.setTarget('');
 			sfx(`good12`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
@@ -308,9 +343,7 @@ export class GameScene {
 			);
 		} else if (errors <= 5) {
 			this.animatorFace.setAnimation('laugh');
-			setTimeout(() => {
-				this.textInput.setTarget('');
-			}, 1000);
+			this.textInput.setTarget('');
 			sfx(`good11`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wow, my feet are feelin' fly! but could you do better next time?`
@@ -325,9 +358,7 @@ export class GameScene {
 			);
 		} else {
 			this.animatorFace.setAnimation('neutral');
-			setTimeout(() => {
-				this.textInput.setTarget('');
-			}, 1000);
+			this.textInput.setTarget('');
 			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
@@ -456,6 +487,7 @@ export class GameScene {
 					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
 					this.screenFilter.flash([1, 1, 1, 0.05], 150);
 					this.textPopup.text = text;
+					++this.combo;
 				}
 			}
 
@@ -491,6 +523,7 @@ export class GameScene {
 					this.screenFilter.flash([1, 0, 0, 0.1], 150);
 					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
+					this.combo = 0;
 				}
 			}
 
