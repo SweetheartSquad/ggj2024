@@ -272,9 +272,11 @@ export class GameScene {
 		this.border.scripts.push(spinner);
 		sfx('countdownGo');
 		this.say('GO!');
+		this.reacting = true;
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			getLine()
 		);
+		this.reacting = false;
 
 		sprClockHands.destroy();
 		sprClockBody.destroy();
@@ -361,6 +363,8 @@ export class GameScene {
 	}
 
 	waiting = true;
+
+	reacting = false;
 
 	async say(text: string) {
 		this.textPopup.text = text;
@@ -454,7 +458,7 @@ export class GameScene {
 			this.bump();
 			const happyFaces = ['neutral', 'smile', 'laugh', 'laughCry'];
 			const madFaces = ['starmouth', 'surprise', 'lookAround'];
-			if (this.textInput.isRight() && this.canBeHappy) {
+			if (this.reacting && this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
 						Math.floor(
@@ -467,7 +471,7 @@ export class GameScene {
 						)
 					]
 				);
-			} else if (!this.textInput.isRight()) {
+			} else if (this.reacting && !this.textInput.isRight()) {
 				this.canBeHappy = false;
 				clearTimeout(this.canBeHappyTimeout);
 				this.canBeHappyTimeout = window.setTimeout(() => {
