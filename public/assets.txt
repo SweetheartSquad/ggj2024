@@ -47,6 +47,8 @@ audio/countdown2.mp3
 audio/countdown3.mp3
 audio/countdownGo.mp3
 
+audio/endBuzzer.mp3
+
 textures/dialogueBg.x3.png
 textures/borderPatternCyan.png
 textures/borderPatternMagenta.png
