@@ -44,9 +44,13 @@ export class TextInput extends GameObject {
 			this.display.container.addChild(t);
 		});
 		this.display.container.x = -this.display.container.width / 2;
-		this.sprScrim.width = this.display.container.width + padding;
+		this.sprScrim.width = this.display.container.width + padding * 2;
 		this.sprScrim.height = this.display.container.height + padding;
 		this.clearCurrent();
+	}
+
+	getX() {
+		return 0 - (this.text[this.strCurrent.length - 1]?.x ?? 0);
 	}
 
 	clearCurrent() {
@@ -59,14 +63,7 @@ export class TextInput extends GameObject {
 		});
 		if (this.text[0]) this.text[0].tint = tintCurrent;
 		if (this.tweenX) TweenManager.abort(this.tweenX);
-		this.tweenX = TweenManager.tween(
-			this.display.container,
-			'x',
-			-this.display.container.width / 2 - this.strCurrent.length * 12,
-			100,
-			undefined,
-			eases.circOut
-		);
+		this.display.container.x = this.getX();
 	}
 
 	addCurrent(str: string) {
@@ -89,7 +86,7 @@ export class TextInput extends GameObject {
 		this.tweenX = TweenManager.tween(
 			this.display.container,
 			'x',
-			-this.display.container.width / 2 - this.strCurrent.length * 12,
+			this.getX(),
 			100,
 			undefined,
 			eases.circOut
@@ -110,7 +107,7 @@ export class TextInput extends GameObject {
 		this.tweenX = TweenManager.tween(
 			this.display.container,
 			'x',
-			-this.display.container.width / 2 - this.strCurrent.length * 12,
+			this.getX(),
 			100,
 			undefined,
 			eases.circOut
@@ -135,5 +132,6 @@ export class TextInput extends GameObject {
 		});
 		this.sprScrim.x = this.display.container.x - padding;
 		this.sprScrim.y = this.display.container.y - padding / 2;
+		this.sprScrim.alpha = this.display.container.alpha;
 	}
 }

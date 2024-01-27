@@ -10,5 +10,6 @@ export const fontDialogue: Partial<IBitmapTextStyle> = {
 	fontName: 'bmfont',
 	align: 'center',
 	letterSpacing: 0,
-	fontSize: 64,
+	fontSize: 32,
+	maxWidth: 400,
 };

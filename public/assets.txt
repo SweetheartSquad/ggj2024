@@ -17,6 +17,7 @@ textures/borderPatternMagenta.png
 textures/borderPatternYellow.png
 
 textures/textBg.png
+textures/vignette.png
 
 textures/faces/neutral.x6.png
 textures/faces/surprise.x4.png

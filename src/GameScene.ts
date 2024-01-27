@@ -22,7 +22,8 @@ import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
 import { fontDialogue } from './font';
-import { shuffle, tex } from './utils';
+import { lines } from './lines';
+import { delay, shuffle, tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -118,6 +119,9 @@ export class GameScene {
 		this.take(this.border);
 		this.take(this.camera);
 
+		const vignette = new Sprite(tex('vignette'));
+		vignette.anchor.x = vignette.anchor.y = 0.5;
+		this.container.addChild(vignette);
 		this.sprPortrait = new Sprite(tex('emptyFrame'));
 		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
 		this.sprFace = new Sprite(tex('neutral'));
@@ -128,9 +132,10 @@ export class GameScene {
 		this.sprPortrait.y -= size.y / 2 - 50;
 		this.sprPopup = new Sprite(tex('dialogueBg'));
 		this.textPopup = new BitmapText('test', fontDialogue);
-		this.textPopup.y += 70;
-		this.textPopup.x += 170;
+		this.textPopup.y += 110;
+		this.textPopup.x += 220;
 		this.textPopup.anchor.x = 0.5;
+		this.textPopup.anchor.y = 0.5;
 		this.sprPopup.addChild(this.textPopup);
 		this.sprPopup.x += this.sprPortrait.width;
 		this.sprPortrait.addChild(this.sprPopup);
@@ -182,12 +187,66 @@ export class GameScene {
 		});
 
 		this.textInput = new TextInput();
-		this.textInput.setTarget('Sphinx of black quartz, hear my vow!');
 		this.container.addChild(this.textInput.sprScrim);
 		this.container.addChild(this.textInput.display.container);
+
+		this.init();
+	}
+
+	async init() {
+		this.textInput.display.container.alpha = 0;
+		await this.say('hello');
+		this.say('type "start" to tickle my feet');
+		this.textInput.display.container.alpha = 1;
+		await this.requireSequence('start');
+		await this.requireSequence(shuffle(lines)[0]);
+	}
+
+	waiting = true;
+
+	async say(text: string) {
+		this.textPopup.text = text;
+		this.bump();
+		await delay(Math.max(800, text.length * 100));
+	}
+
+	async requireSequence(text: string) {
+		this.waiting = false;
+		this.textInput.clearCurrent();
+		this.textInput.setTarget(text);
+		const startTime = game.app.ticker.lastTime;
+		await new Promise<void>((r) => {
+			const check = () => {
+				if (
+					this.textInput.strCurrent.length === this.textInput.strTarget.length
+				) {
+					return r();
+				}
+				requestAnimationFrame(check);
+			};
+			check();
+		});
+		const endTime = game.app.ticker.lastTime;
+		const timeTaken = endTime - startTime;
+		const errors = this.textInput.strCurrent
+			.split('')
+			.filter((i, idx) => i !== this.textInput.strTarget[idx]);
+		this.waiting = true;
+		return {
+			errors,
+			timeTaken,
+		};
+	}
+
+	bump() {
+		if (this.portraitBumpTween) TweenManager.abort(this.portraitBumpTween);
+		this.portraitBump = 0.1;
+		// @ts-expect-error weird `this` thing
+		this.portraitBumpTween = TweenManager.tween(this, 'portraitBump', 0, 100);
 	}
 
 	onInput = (event: KeyboardEvent) => {
+		if (this.waiting) return;
 		const keyReplacements: { [key: string]: string | undefined } = {
 			// backspace needs special handling
 			Backspace: 'Backspace',
@@ -209,10 +268,7 @@ export class GameScene {
 			this.textInput.backspace();
 		} else {
 			this.textInput.addCurrent(type);
-			if (this.portraitBumpTween) TweenManager.abort(this.portraitBumpTween);
-			this.portraitBump = 0.1;
-			// @ts-expect-error weird `this` thing
-			this.portraitBumpTween = TweenManager.tween(this, 'portraitBump', 0, 100);
+			this.bump();
 			this.animatorFace.setAnimation(
 				shuffle(['neutral', 'surprise', 'smile', 'starmouth', 'lookAround'])[0]
 			);
