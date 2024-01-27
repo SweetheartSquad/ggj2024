@@ -205,7 +205,9 @@ export class GameScene {
 		await this.say(
 			`wow that was ${timeTakenInSeconds.toFixed(2)}s with ${errors} mistakes!`
 		);
-		await this.say(`you've got a tpm (tickle per minute) of ${wpm}!`);
+		await this.say(
+			`you've got a tpm (tickle per minute) of ${Math.round(wpm)}!`
+		);
 	}
 
 	waiting = true;
