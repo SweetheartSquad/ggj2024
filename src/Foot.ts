@@ -31,6 +31,7 @@ export class Foot extends GameObject {
 		});
 		this.toes.forEach((toe) => this.display.container.addChild(toe));
 		this.display.container.addChild(this.base);
+		this.init();
 	}
 
 	curl(toe: number) {
@@ -55,6 +56,7 @@ export class Foot extends GameObject {
 		this.timeouts[toe] = 0;
 	}
 	update(): void {
+		super.update();
 		this.display.container.pivot.y =
 			Math.sin(game.app.ticker.lastTime * 0.01 + this.offset) * 5 + this.bump;
 	}
