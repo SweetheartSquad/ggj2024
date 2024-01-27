@@ -417,17 +417,24 @@ export class GameScene {
 		const key = event.key;
 		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
 		if (!type) return;
-
-		const wasRight = this.textInput.isRight();
-
 		if (type === 'Backspace') {
 			this.textInput.backspace();
 		} else {
 			this.textInput.addCurrent(type);
-
-			if (!this.textInput.isRight() && wasRight) {
-				clearTimeout(this.canPlayGoodBadSoundTimeout);
+			if (this.textInput.strTarget[this.textInput.strCurrent.length] === ' ') {
 				this.canPlayGoodBadSound = true;
+
+				const words = this.textInput.strCurrent.split(' ');
+
+				if (
+					this.textInput.strTarget.split(' ')[words.length - 1] ===
+					words[words.length - 1]
+				) {
+					const [idx, text] = randomSound('good');
+					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
+					this.screenFilter.flash([1, 1, 1, 0.05], 150);
+					this.textPopup.text = text;
+				}
 			}
 
 			// update visuals
@@ -447,17 +454,6 @@ export class GameScene {
 						)
 					]
 				);
-
-				if (this.canPlayGoodBadSound) {
-					const [idx, text] = randomSound('good');
-					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
-					this.screenFilter.flash([1, 1, 1, 0.05], 150);
-					this.textPopup.text = text;
-					this.canPlayGoodBadSound = false;
-					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
-						this.canPlayGoodBadSound = true;
-					}, 1000);
-				}
 			} else if (!this.textInput.isRight()) {
 				this.canBeHappy = false;
 				clearTimeout(this.canBeHappyTimeout);
@@ -473,9 +469,6 @@ export class GameScene {
 					this.screenFilter.flash([1, 0, 0, 0.1], 150);
 					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
-					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
-						this.canPlayGoodBadSound = true;
-					}, 1000);
 				}
 			}
 
