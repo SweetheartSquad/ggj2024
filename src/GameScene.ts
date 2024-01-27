@@ -61,6 +61,7 @@ export class GameScene {
 	sprPopup: Sprite;
 	textPopup: BitmapText;
 
+	furthest: number = -1;
 	combo: number = 0;
 	textCombo: BitmapText;
 
@@ -195,6 +196,7 @@ export class GameScene {
 		this.sprFeather.anchor.y = 0.8;
 		this.container.addChild(this.sprFeather);
 
+		this.furthest = -1;
 		this.combo = 0;
 		this.textCombo = new BitmapText(``, fontCombo);
 		this.container.addChild(this.textCombo);
@@ -486,7 +488,10 @@ export class GameScene {
 			this.textInput.backspace();
 		} else {
 			this.textInput.addCurrent(type);
-			if (this.textInput.strTarget[this.textInput.strCurrent.length] === ' ') {
+			if (
+				this.textInput.strTarget[this.textInput.strCurrent.length] === ' ' &&
+				this.textInput.strCurrent.length > this.furthest
+			) {
 				this.canPlayGoodBadSound = true;
 
 				if (
@@ -690,6 +695,8 @@ export class GameScene {
 					(t) => Math.sin(t * Math.PI * 2 * 3 + Math.PI) * 20 * eases.backOut(t)
 				);
 			}
+
+			this.furthest = Math.max(this.furthest, this.textInput.strCurrent.length);
 		}
 	};
 
