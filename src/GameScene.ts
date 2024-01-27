@@ -225,6 +225,11 @@ export class GameScene {
 				}
 			}
 		}
+
+		this.doRun();
+	}
+
+	async doRun() {
 		this.animatorFace.setAnimation('neutral');
 		await this.say('3');
 		await this.say('2');
@@ -233,12 +238,67 @@ export class GameScene {
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			shuffle(lines)[0]
 		);
-		await this.say(
-			`wow that was ${timeTakenInSeconds.toFixed(2)}s with ${errors} mistakes!`
-		);
-		await this.say(
-			`you've got a tpm (tickle per minute) of ${Math.round(wpm)}!`
-		);
+
+		this.sprPopup.scale.x = 2;
+		this.sprPopup.scale.y = 2;
+		this.textPopup.fontSize = (fontDialogue.fontSize ?? 1) / 2;
+
+		if (errors === 0) {
+			this.animatorFace.setAnimation('laughCry');
+			await this.say(
+				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
+			);
+			this.say(
+				`you did ${Math.round(
+					wpm
+				)} tickles per minute in ${timeTakenInSeconds.toFixed(
+					2
+				)}s! why don't you type "restart" and tickle me again?`
+			);
+		} else if (errors <= 5) {
+			this.animatorFace.setAnimation('laugh');
+			await this.say(
+				`wow, my feet are feelin' fly! but could you do better next time?`
+			);
+			this.say(
+				`you did ${Math.round(
+					wpm
+				)} tickles per minute in ${timeTakenInSeconds.toFixed(
+					2
+				)}s, but you made ${errors} whoopsies! why don't you type "restart" and tickle me again?`
+			);
+		} else {
+			this.animatorFace.setAnimation('neutral');
+			await this.say(
+				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
+			);
+			this.say(
+				`you did ${Math.round(
+					wpm
+				)} tickles per minute in ${timeTakenInSeconds.toFixed(
+					2
+				)}s, but you made ${errors} whoopsies! why don't you type "restart" and tickle me again?`
+			);
+		}
+		await new Promise<void>((r) => {
+			const check = async () => {
+				const { errors } = await this.requireSequence('restart');
+
+				this.sprPopup.scale.x = 1;
+				this.sprPopup.scale.y = 1;
+				this.textPopup.fontSize = fontDialogue.fontSize;
+				if (errors) {
+					this.animatorFace.setAnimation('neutral');
+					await this.say('seriously?');
+					this.say('type "restart" to try again');
+					check();
+				} else {
+					r();
+				}
+			};
+			check();
+		});
+		this.doRun();
 	}
 
 	waiting = true;
