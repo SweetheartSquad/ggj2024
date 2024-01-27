@@ -311,7 +311,7 @@ export class GameScene {
 	async say(text: string) {
 		this.textPopup.text = text;
 		this.bump();
-		await delay(Math.max(800, text.length * 100));
+		await delay(Math.max(800, text.length * 80));
 	}
 
 	async requireSequence(text: string) {
