@@ -128,6 +128,16 @@ export class GameScene {
 		this.take(this.border);
 		this.take(this.camera);
 
+		const bg = new Sprite(tex('background'));
+		bg.anchor.x = bg.anchor.y = 0.5;
+		this.container.addChild(bg);
+		this.border.scripts.push(
+			new Animator(this.border, {
+				spr: bg,
+				freq: 1 / 200,
+			})
+		);
+
 		const vignette = new Sprite(tex('vignette'));
 		vignette.anchor.x = vignette.anchor.y = 0.5;
 		this.container.addChild(vignette);
