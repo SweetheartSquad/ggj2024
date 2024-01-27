@@ -205,25 +205,30 @@ export class GameScene {
 	}
 
 	async init() {
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		await this.say('hello');
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.say('type "start" to tickle my feet');
 		{
 			let { errors } = await this.requireSequence('start');
 			this.textInput.setTarget('');
 			this.textInput.clearCurrent();
 			if (errors) {
+				sfx(`bad0`, { rate: Math.random() * 0.5 + 1.5 });
 				this.animatorFace.setAnimation('neutral');
 				this.say('oops! not quite, try that again');
 				errors = (await this.requireSequence('start')).errors;
 				this.textInput.setTarget('');
 				this.textInput.clearCurrent();
 				if (errors) {
+					sfx(`bad4`, { rate: Math.random() * 0.5 + 1.5 });
 					this.animatorFace.setAnimation('surprise');
 					this.say('hmm, you seem a little rusty?');
 					errors = (await this.requireSequence('start')).errors;
 					this.textInput.setTarget('');
 					this.textInput.clearCurrent();
 					if (errors) {
+						sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 						this.animatorFace.setAnimation('surprise');
 						await this.say('ugh fine, whatever');
 						await this.say("i guess you'll have to do");
@@ -285,9 +290,11 @@ export class GameScene {
 			setTimeout(() => {
 				this.textInput.setTarget('');
 			}, 1000);
+			sfx(`good12`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
 			);
+			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
 					wpm
@@ -300,9 +307,11 @@ export class GameScene {
 			setTimeout(() => {
 				this.textInput.setTarget('');
 			}, 1000);
+			sfx(`good11`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wow, my feet are feelin' fly! but could you do better next time?`
 			);
+			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
 					wpm
@@ -315,9 +324,11 @@ export class GameScene {
 			setTimeout(() => {
 				this.textInput.setTarget('');
 			}, 1000);
+			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
 			);
+			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
 					wpm
@@ -335,7 +346,9 @@ export class GameScene {
 				this.textPopup.fontSize = fontDialogue.fontSize;
 				if (errors) {
 					this.animatorFace.setAnimation('neutral');
+					sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 					await this.say('seriously?');
+					sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 					this.say('type "restart" to try again');
 					check();
 				} else {
