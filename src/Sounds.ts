@@ -8,20 +8,13 @@ export enum Sounds {
 }
 
 export function randomSound(sound: Sounds): void {
-    switch (sound) {
-        case Sounds.Good:
-            for (let i = 0; i < Sounds.Bad; i++) {
-                getHowl(soundNameAtIndex(sound, i))?.stop();
-            }
-            break;
-        case Sounds.Bad:
-            for (let i = 0; i < Sounds.Good; i++) {
-                getHowl(soundNameAtIndex(sound, i))?.stop();
-            }
-            break;
-    }
-
     sfx(`${soundNameAtIndex(sound, randRange(1, sound))}`);
+}
+
+export function cancelSound(sound: Sounds): void {
+    for (let i = 0; i < sound; i++) {
+        getHowl(soundNameAtIndex(sound, i))?.stop();
+    }
 }
 
 function soundNameAtIndex(sound: Sounds, index: number): string {

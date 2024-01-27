@@ -11,6 +11,7 @@ textures/border.png
 
 audio/bgm.mp3
 
+audio/type0.mp3
 audio/type1.mp3
 audio/type2.mp3
 audio/type3.mp3
@@ -19,8 +20,8 @@ audio/type5.mp3
 audio/type6.mp3
 audio/type7.mp3
 audio/type8.mp3
-audio/type9.mp3
 
+audio/good0.mp3
 audio/good1.mp3
 audio/good2.mp3
 audio/good3.mp3
@@ -33,8 +34,8 @@ audio/good9.mp3
 audio/good10.mp3
 audio/good11.mp3
 audio/good12.mp3
-audio/good13.mp3
 
+audio/bad0.mp3
 audio/bad1.mp3
 audio/bad2.mp3
 audio/bad3.mp3
@@ -48,7 +49,6 @@ audio/bad10.mp3
 audio/bad11.mp3
 audio/bad12.mp3
 audio/bad13.mp3
-audio/bad14.mp3
 
 audio/countdownCount.mp3
 audio/countdownGo.mp3

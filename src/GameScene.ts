@@ -18,7 +18,7 @@ import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
 import { Animator } from './Scripts/Animator';
 import { Updater } from './Scripts/Updater';
-import { Sounds, randomSound } from './Sounds';
+import { Sounds, cancelSound, randomSound } from './Sounds';
 import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
@@ -388,6 +388,7 @@ export class GameScene {
 			if (!this.textInput.isRight() && wasRight) {
 				clearTimeout(this.canPlayGoodBadSoundTimeout);
 				this.canPlayGoodBadSound = true;
+				cancelSound(Sounds.Good);
 			}
 
 			// update visuals
