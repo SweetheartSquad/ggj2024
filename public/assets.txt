@@ -11,44 +11,6 @@ textures/border.png
 
 audio/bgm.mp3
 
-audio/type.mp3
-
-audio/good0.mp3
-audio/good1.mp3
-audio/good2.mp3
-audio/good3.mp3
-audio/good4.mp3
-audio/good5.mp3
-audio/good6.mp3
-audio/good7.mp3
-audio/good8.mp3
-audio/good9.mp3
-audio/good10.mp3
-audio/good11.mp3
-audio/good12.mp3
-
-audio/bad0.mp3
-audio/bad1.mp3
-audio/bad2.mp3
-audio/bad3.mp3
-audio/bad4.mp3
-audio/bad5.mp3
-audio/bad6.mp3
-audio/bad7.mp3
-audio/bad8.mp3
-audio/bad9.mp3
-audio/bad10.mp3
-audio/bad11.mp3
-audio/bad12.mp3
-audio/bad13.mp3
-
-audio/countdown1.mp3
-audio/countdown2.mp3
-audio/countdown3.mp3
-audio/countdownGo.mp3
-
-audio/endBuzzer.mp3
-
 textures/dialogueBg.x3.png
 textures/borderPatternCyan.png
 textures/borderPatternMagenta.png
@@ -73,7 +35,7 @@ textures/foot/toe3.x2.png
 textures/foot/toe4.x2.png
 textures/foot/foot.png
 
-textures/background/background.x12.png
+textures/background/background.x24.png
 
 textures/clockHands.png
 textures/clockBody.png
