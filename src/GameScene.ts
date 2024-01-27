@@ -189,6 +189,7 @@ export class GameScene {
 		this.textInput = new TextInput();
 		this.container.addChild(this.textInput.sprScrim);
 		this.container.addChild(this.textInput.display.container);
+		this.textInput.display.container.y = size.y / 2 - 93 / 2 - 45;
 
 		this.init();
 	}
