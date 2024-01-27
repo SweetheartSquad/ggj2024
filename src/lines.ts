@@ -1,3 +1,5 @@
+import { shuffle } from "./utils";
+
 export const lines = [
 	`Tis but thy name that is my enemy; Thou art thyself, though not a Montague. What's Montague? It is nor heel, nor arch, Nor ball, nor toe, nor any other part / Belonging to a foot. O, be some other name! What's in a name? That which we call a foot / By any other name would smell as sweet; So Tomeo would, were he not Tomeo call'd, Retain that dear perfection which he owes / Without that title. Tomeo, doff thy name, And for that name which is no part of thee / Take all my toes.`,
 	`I must not post feet. Feet are the mind-killers. Feet are the little-deaths that brings total obliteration. I will face my feet. I will permit feet to pass over me and through me. And when the feet have gone past I will turn the inner foot to see their path. Where the feet have gone there will be nothing. Only I will remain.`,
