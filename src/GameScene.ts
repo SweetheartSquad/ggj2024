@@ -145,7 +145,11 @@ export class GameScene {
 		this.feet.forEach((f) => {
 			this.container.addChild(f.display.container);
 		});
-		this.feet[0].display.container.scale.x = -1;
+		this.feet[1].display.container.scale.x = -1;
+		this.feet[0].transform.x = -this.feet[0].display.container.width / 4;
+		this.feet[1].transform.x = this.feet[1].display.container.width / 4;
+		this.take(this.feet[0]);
+		this.take(this.feet[1]);
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
