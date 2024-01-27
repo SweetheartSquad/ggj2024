@@ -83,6 +83,10 @@ export class GameScene {
 
 	textInput: TextInput;
 	feet: [Foot, Foot];
+	sprFeather: Sprite;
+	tweenFeatherX?: Tween;
+	tweenFeatherY?: Tween;
+	tweenFeatherA?: Tween;
 
 	constructor() {
 		const bgs = [
@@ -157,6 +161,10 @@ export class GameScene {
 		this.feet[1].transform.x = -this.feet[1].display.container.width * 0.55;
 		this.take(this.feet[0]);
 		this.take(this.feet[1]);
+		this.sprFeather = new Sprite(tex('feather'));
+		this.sprFeather.anchor.x = 0.2;
+		this.sprFeather.anchor.y = 0.8;
+		this.container.addChild(this.sprFeather);
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
@@ -573,6 +581,49 @@ export class GameScene {
 			}
 			if (toe >= 0) {
 				this.feet[foot].curl(toe);
+				const [x, y] = [
+					[
+						[-110, 120],
+						[-240, 110],
+						[-310, 140],
+						[-340, 200],
+						[-390, 260],
+					],
+					[
+						[110, 120],
+						[240, 110],
+						[310, 140],
+						[340, 200],
+						[390, 260],
+					],
+				][foot][toe];
+				if (this.tweenFeatherX) TweenManager.abort(this.tweenFeatherX);
+				if (this.tweenFeatherY) TweenManager.abort(this.tweenFeatherY);
+				if (this.tweenFeatherA) TweenManager.abort(this.tweenFeatherA);
+				this.tweenFeatherX = TweenManager.tween(
+					this.sprFeather,
+					'x',
+					x - this.sprFeather.width * (1 - this.sprFeather.anchor.x),
+					150,
+					undefined,
+					eases.circInOut
+				);
+				this.tweenFeatherY = TweenManager.tween(
+					this.sprFeather,
+					'y',
+					y + this.sprFeather.height * (1 - this.sprFeather.anchor.y),
+					150,
+					undefined,
+					eases.circInOut
+				);
+				this.tweenFeatherA = TweenManager.tween(
+					this.sprFeather,
+					'angle',
+					0,
+					300,
+					1,
+					(t) => Math.sin(t * Math.PI * 2 * 3 + Math.PI) * 20 * eases.backOut(t)
+				);
 			}
 		}
 	};
@@ -602,6 +653,9 @@ export class GameScene {
 
 	update(): void {
 		const curTime = game.app.ticker.lastTime;
+
+		this.sprFeather.pivot.y = Math.sin(curTime * 0.005) * 5;
+		this.sprFeather.pivot.x = Math.sin(curTime * 0.0025) * 5;
 
 		// depth sort
 		// this.sortScene();
