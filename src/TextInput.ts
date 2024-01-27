@@ -98,14 +98,14 @@ export class TextInput extends GameObject {
 
 	backspace() {
 		if (!this.strCurrent.length) return;
-		let idx = this.strCurrent.length - 1;
-		this.text[idx].tint = tintUpcoming;
-		this.text[idx].text = this.strTarget[idx];
 		this.strCurrent = this.strCurrent.substring(0, this.strCurrent.length - 1);
-		idx = this.strCurrent.length - 1;
+		const idx = this.strCurrent.length;
 		if (idx < 0) return;
 		this.text[idx].tint = tintCurrent;
 		this.text[idx].text = this.strTarget[idx];
+		if (!this.text[idx + 1]) return;
+		this.text[idx + 1].tint = tintUpcoming;
+		this.text[idx + 1].text = this.strTarget[idx + 1];
 		if (this.tweenX) TweenManager.abort(this.tweenX);
 		this.tweenX = TweenManager.tween(
 			this.display.container,
