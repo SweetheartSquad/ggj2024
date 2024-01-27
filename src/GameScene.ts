@@ -441,11 +441,14 @@ export class GameScene {
 			if (this.textInput.strTarget[this.textInput.strCurrent.length] === ' ') {
 				this.canPlayGoodBadSound = true;
 
-				const words = this.textInput.strCurrent.split(' ');
-
 				if (
-					this.textInput.strTarget.split(' ')[words.length - 1] ===
-					words[words.length - 1]
+					this.reacting &&
+					this.textInput.strCurrent.endsWith(
+						this.textInput.strTarget
+							.substring(0, this.textInput.strCurrent.length)
+							.split(' ')
+							.pop() || ''
+					)
 				) {
 					const [idx, text] = randomSound('good');
 					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
