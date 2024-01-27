@@ -24,13 +24,13 @@ export class Foot extends GameObject {
 		this.scripts.push((this.display = new Display(this)));
 		this.base = new Sprite(tex('foot'));
 		this.base.anchor.x = 0.5;
+		this.display.container.addChild(this.base);
 		new Array(5).fill(0).map((_, idx) => {
 			const s = new Sprite(tex(`toe${idx}.1`));
 			s.anchor.x = 0.5;
 			this.toes.push(s);
 		});
 		this.toes.forEach((toe) => this.display.container.addChild(toe));
-		this.display.container.addChild(this.base);
 		this.init();
 	}
 
