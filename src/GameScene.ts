@@ -13,12 +13,13 @@ import { game } from './Game';
 import { GameObject } from './GameObject';
 import { PropParallax } from './PropParallax';
 import { ScreenFilter } from './ScreenFilter';
+import { Animator } from './Scripts/Animator';
 import { Updater } from './Scripts/Updater';
 import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
-import { tex } from './utils';
+import { shuffle, tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -47,6 +48,9 @@ export class GameScene {
 	area?: string;
 
 	sprPortrait: Sprite;
+	sprFace: Sprite;
+	animatorFace: Animator;
+	sprPortrait2: Sprite;
 
 	get currentArea() {
 		return this.areas[this.area || ''];
@@ -108,7 +112,11 @@ export class GameScene {
 		this.take(this.border);
 		this.take(this.camera);
 
-		this.sprPortrait = new Sprite(tex('portrait'));
+		this.sprPortrait = new Sprite(tex('emptyFrame'));
+		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
+		this.sprFace = new Sprite(tex('neutral'));
+		this.sprPortrait.addChild(this.sprFace);
+		this.sprPortrait.addChild(this.sprPortrait2);
 		this.container.addChild(this.sprPortrait);
 		this.sprPortrait.x -= size.x / 2 - 50;
 		this.sprPortrait.y -= size.y / 2 - 50;
@@ -124,7 +132,15 @@ export class GameScene {
 					) -
 						0.5) *
 					5;
+				this.sprFace.anchor = this.sprPortrait2.anchor =
+					this.sprPortrait.anchor;
 			})
+		);
+		this.border.scripts.push(
+			(this.animatorFace = new Animator(this.border, {
+				spr: this.sprFace,
+				freq: 1 / 100,
+			}))
 		);
 
 		this.screenFilter = new ScreenFilter();
@@ -167,6 +183,9 @@ export class GameScene {
 			this.portraitBump = 0.1;
 			// @ts-expect-error weird `this` thing
 			this.portraitBumpTween = TweenManager.tween(this, 'portraitBump', 0, 100);
+			this.animatorFace.setAnimation(
+				shuffle(['neutral', 'surprise', 'smile', 'starmouth', 'lookAround'])[0]
+			);
 		}
 	};
 
