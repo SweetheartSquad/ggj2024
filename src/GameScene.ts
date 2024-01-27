@@ -232,11 +232,11 @@ export class GameScene {
 
 	async doRun() {
 		this.animatorFace.setAnimation('neutral');
-		sfx('countdownCount');
+		sfx('countdown3');
 		await this.say('3');
-		sfx('countdownCount');
+		sfx('countdown2');
 		await this.say('2');
-		sfx('countdownCount');
+		sfx('countdown1');
 		await this.say('1');
 		sfx('countdownGo');
 		this.say('GO!');
@@ -396,14 +396,14 @@ export class GameScene {
 			if (this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
-						Math.floor(
-							lerp(
-								0,
-								happyFaces.length - 1,
-								this.textInput.strCurrent.length /
-									this.textInput.strTarget.length
-							) + 0.5
-						)
+					Math.floor(
+						lerp(
+							0,
+							happyFaces.length - 1,
+							this.textInput.strCurrent.length /
+							this.textInput.strTarget.length
+						) + 0.5
+					)
 					]
 				);
 

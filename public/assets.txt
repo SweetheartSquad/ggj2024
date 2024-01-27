@@ -42,7 +42,9 @@ audio/bad11.mp3
 audio/bad12.mp3
 audio/bad13.mp3
 
-audio/countdownCount.mp3
+audio/countdown1.mp3
+audio/countdown2.mp3
+audio/countdown3.mp3
 audio/countdownGo.mp3
 
 textures/dialogueBg.x3.png
