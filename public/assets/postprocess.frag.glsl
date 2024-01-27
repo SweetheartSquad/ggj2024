@@ -3,7 +3,6 @@ precision mediump float;
 varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
-uniform float whiteout;
 uniform float invert;
 uniform vec2 camPos;
 const vec2 size = vec2(1280.0, 720.0);
@@ -14,8 +13,6 @@ uniform vec4 overlay;
 	uniform float curTime;
 #endif
 uniform sampler2D ditherGridMap;
-uniform vec3 bg;
-uniform vec3 fg;
 const vec2 ditherSize = vec2(4.0);
 const float scale = 1.0;
 const float posterize = 16.0;

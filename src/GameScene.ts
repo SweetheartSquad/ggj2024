@@ -657,8 +657,6 @@ export class GameScene {
 		this.sprFeather.pivot.y = Math.sin(curTime * 0.005) * 5;
 		this.sprFeather.pivot.x = Math.sin(curTime * 0.0025) * 5;
 
-		this.screenFilter.update();
-
 		GameObject.update();
 		TweenManager.update();
 		this.screenFilter.uniforms.curTime = curTime / 1000;
