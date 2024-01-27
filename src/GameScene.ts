@@ -107,19 +107,19 @@ export class GameScene {
 			this.container.addChild(bgParallax.display.container);
 			bgParallax.spr.texture.baseTexture.scaleMode = SCALE_MODES.LINEAR;
 
-			const start = game.app.ticker.lastTime;
+			let speed = 100;
 			bgParallax.scripts.push({
 				gameObject: bgParallax,
-				update() {
-					const speed = 100; // TODO: speed based on typing
-					bgParallax.spr.tilePosition.x =
-						((game.app.ticker.lastTime - start) / 1000) *
-						speed *
-						bgParallax.mult[0];
-					bgParallax.spr.tilePosition.y =
-						((game.app.ticker.lastTime - start) / 1000) *
-						speed *
-						bgParallax.mult[1];
+				update: () => {
+					speed = lerp(
+						speed,
+						100 + (this.combo || 1) * 10,
+						0.1 * game.app.ticker.deltaTime
+					);
+					bgParallax.spr.tilePosition.x +=
+						(game.app.ticker.deltaMS / 1000) * speed * bgParallax.mult[0];
+					bgParallax.spr.tilePosition.y +=
+						(game.app.ticker.deltaMS / 1000) * speed * bgParallax.mult[1];
 				},
 			});
 		});
