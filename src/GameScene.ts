@@ -24,8 +24,8 @@ import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
 import { fontDialogue } from './font';
-import { lines } from './lines';
-import { delay, lerp, shuffle, tex } from './utils';
+import { getLine } from './lines';
+import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -231,18 +231,44 @@ export class GameScene {
 	}
 
 	async doRun() {
+		const sprClockHands = new Sprite(tex('clockHands'));
+		const sprClockBody = new Sprite(tex('clockBody'));
+		sprClockHands.x = sprClockBody.x = size.x / 2 - 140;
+		sprClockHands.y = sprClockBody.y = -size.y / 2 + 140;
+		sprClockHands.anchor.x =
+			sprClockHands.anchor.y =
+			sprClockBody.anchor.x =
+			sprClockBody.anchor.y =
+				0.5;
+		this.container.addChild(sprClockBody);
+		this.container.addChild(sprClockHands);
+		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 		this.animatorFace.setAnimation('neutral');
 		sfx('countdownCount');
 		await this.say('3');
+		sprClockHands.alpha = sprClockBody.alpha = 0.5;
 		sfx('countdownCount');
 		await this.say('2');
+		sprClockHands.alpha = sprClockBody.alpha = 0.75;
 		sfx('countdownCount');
 		await this.say('1');
+		sprClockHands.alpha = sprClockBody.alpha = 1;
+		const start = game.app.ticker.lastTime;
+		const spinner = new Updater(this.border, () => {
+			sprClockBody.angle =
+				((game.app.ticker.lastTime - start) / 1000 / 60) * 360;
+		});
+		this.border.scripts.push(spinner);
 		sfx('countdownGo');
 		this.say('GO!');
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
-			shuffle(lines)[0]
+			getLine()
 		);
+
+		sprClockHands.destroy();
+		sprClockBody.destroy();
+		removeFromArray(this.border.scripts, spinner);
+		spinner.destroy?.();
 
 		this.sprPopup.scale.x = 2;
 		this.sprPopup.scale.y = 2;
