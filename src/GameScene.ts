@@ -279,11 +279,12 @@ export class GameScene {
 		this.reacting = false;
 
 		sfx('endBuzzer');
-
 		sprClockHands.destroy();
 		sprClockBody.destroy();
 		removeFromArray(this.border.scripts, spinner);
 		spinner.destroy?.();
+		this.say(`that's it!`);
+		await delay(2000);
 
 		this.sprPopup.scale.x = 2;
 		this.sprPopup.scale.y = 2;
@@ -291,9 +292,7 @@ export class GameScene {
 
 		if (errors === 0) {
 			this.animatorFace.setAnimation('laughCry');
-			setTimeout(() => {
-				this.textInput.setTarget('');
-			}, 1000);
+			this.textInput.setTarget('');
 			sfx(`good12`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
@@ -308,9 +307,7 @@ export class GameScene {
 			);
 		} else if (errors <= 5) {
 			this.animatorFace.setAnimation('laugh');
-			setTimeout(() => {
-				this.textInput.setTarget('');
-			}, 1000);
+			this.textInput.setTarget('');
 			sfx(`good11`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`wow, my feet are feelin' fly! but could you do better next time?`
@@ -325,9 +322,7 @@ export class GameScene {
 			);
 		} else {
 			this.animatorFace.setAnimation('neutral');
-			setTimeout(() => {
-				this.textInput.setTarget('');
-			}, 1000);
+			this.textInput.setTarget('');
 			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
