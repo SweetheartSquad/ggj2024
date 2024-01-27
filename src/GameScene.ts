@@ -244,13 +244,13 @@ export class GameScene {
 		this.container.addChild(sprClockHands);
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 		this.animatorFace.setAnimation('neutral');
-		sfx('countdownCount');
+		sfx('countdown3');
 		await this.say('3');
 		sprClockHands.alpha = sprClockBody.alpha = 0.5;
-		sfx('countdownCount');
+		sfx('countdown2');
 		await this.say('2');
 		sprClockHands.alpha = sprClockBody.alpha = 0.75;
-		sfx('countdownCount');
+		sfx('countdown1');
 		await this.say('1');
 		sprClockHands.alpha = sprClockBody.alpha = 1;
 		const start = game.app.ticker.lastTime;
