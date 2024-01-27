@@ -191,17 +191,14 @@ export class GameScene {
 		this.textInput = new TextInput();
 		this.container.addChild(this.textInput.sprScrim);
 		this.container.addChild(this.textInput.display.container);
-		this.textInput.display.container.y = size.y / 2 - 93 / 2 - 45;
 
 		music('bgm');
 		this.init();
 	}
 
 	async init() {
-		this.textInput.display.container.alpha = 0;
 		await this.say('hello');
 		this.say('type "start" to tickle my feet');
-		this.textInput.display.container.alpha = 1;
 		{
 			let { errors } = await this.requireSequence('start');
 			this.textInput.setTarget('');
@@ -244,6 +241,7 @@ export class GameScene {
 		this.container.addChild(sprClockHands);
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 		this.animatorFace.setAnimation('neutral');
+		this.textInput.setTarget('');
 		sfx('countdown3');
 		await this.say('3');
 		sprClockHands.alpha = sprClockBody.alpha = 0.5;
@@ -276,6 +274,9 @@ export class GameScene {
 
 		if (errors === 0) {
 			this.animatorFace.setAnimation('laughCry');
+			setTimeout(() => {
+				this.textInput.setTarget('');
+			}, 1000);
 			await this.say(
 				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
 			);
@@ -288,6 +289,9 @@ export class GameScene {
 			);
 		} else if (errors <= 5) {
 			this.animatorFace.setAnimation('laugh');
+			setTimeout(() => {
+				this.textInput.setTarget('');
+			}, 1000);
 			await this.say(
 				`wow, my feet are feelin' fly! but could you do better next time?`
 			);
@@ -300,6 +304,9 @@ export class GameScene {
 			);
 		} else {
 			this.animatorFace.setAnimation('neutral');
+			setTimeout(() => {
+				this.textInput.setTarget('');
+			}, 1000);
 			await this.say(
 				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
 			);
