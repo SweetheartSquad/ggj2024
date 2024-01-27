@@ -306,6 +306,10 @@ export class GameScene {
 				case '?':
 				case '-':
 				case '_':
+				case '[':
+				case '{':
+				case "'":
+				case '"':
 				case '=':
 				case '+':
 				case ']':
