@@ -99,7 +99,7 @@ export class TextInput extends GameObject {
 	backspace() {
 		if (!this.strCurrent.length) return;
 		let idx = this.strCurrent.length - 1;
-		this.text[idx].tint = 0xbbbbbb;
+		this.text[idx].tint = tintUpcoming;
 		this.text[idx].text = this.strTarget[idx];
 		this.strCurrent = this.strCurrent.substring(0, this.strCurrent.length - 1);
 		idx = this.strCurrent.length - 1;
