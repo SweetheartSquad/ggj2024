@@ -409,7 +409,7 @@ export class GameScene {
 
 				if (this.canPlayGoodBadSound) {
 					const [idx, text] = randomSound('good');
-					sfx(`good${idx}`);
+					sfx(`good${idx}`, { rate: Math.random() * 0.5 + 1.5 });
 					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
 					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
@@ -427,7 +427,7 @@ export class GameScene {
 
 				if (this.canPlayGoodBadSound) {
 					const [idx, text] = randomSound('bad');
-					sfx(`bad${idx}`);
+					sfx(`bad${idx}`, { rate: Math.random() * 0.5 + 1.5 });
 					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
 					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
