@@ -8,7 +8,7 @@ export enum Sounds {
 }
 
 export function randomSound(sound: Sounds): void {
-    sfx(`${soundNameAtIndex(sound, randRange(1, sound))}`);
+    sfx(`${soundNameAtIndex(sound, randRange(0, sound - 1))}`);
 }
 
 export function cancelSound(sound: Sounds): void {
