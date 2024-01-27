@@ -10,6 +10,7 @@ import {
 import { Area } from './Area';
 import { Border } from './Border';
 import { Camera } from './Camera';
+import { Foot } from './Foot';
 import { game } from './Game';
 import { GameObject } from './GameObject';
 import { PropParallax } from './PropParallax';
@@ -78,6 +79,7 @@ export class GameScene {
 	portraitBumpTween?: Tween;
 
 	textInput: TextInput;
+	feet: [Foot, Foot];
 
 	constructor() {
 		const bgs = [
@@ -138,6 +140,12 @@ export class GameScene {
 				freq: 1 / 200,
 			})
 		);
+
+		this.feet = [new Foot(), new Foot()];
+		this.feet.forEach((f) => {
+			this.container.addChild(f.display.container);
+		});
+		this.feet[0].display.container.scale.x = -1;
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
@@ -214,6 +222,103 @@ export class GameScene {
 				'hee',
 				'teehee',
 			])[0];
+
+			let foot = 0;
+			let toe = -1;
+			switch (type.toLowerCase()) {
+				case '`':
+				case '~':
+				case '!':
+				case '1':
+				case 'q':
+				case 'a':
+				case 'z':
+					toe = 4;
+					break;
+				case '@':
+				case '2':
+				case 'w':
+				case 's':
+				case 'x':
+					toe = 3;
+					break;
+				case '#':
+				case '3':
+				case 'e':
+				case 'd':
+				case 'c':
+					toe = 2;
+					break;
+				case '$':
+				case '4':
+				case 'r':
+				case 'f':
+				case 'v':
+					toe = 1;
+					break;
+				case '%':
+				case '5':
+				case 't':
+				case 'g':
+				case 'b':
+					toe = 0;
+					break;
+				case '^':
+				case '6':
+				case 'y':
+				case 'h':
+				case 'n':
+					foot = 1;
+					toe = 0;
+					break;
+				case '&':
+				case '7':
+				case 'u':
+				case 'j':
+				case 'm':
+					foot = 1;
+					toe = 1;
+					break;
+				case '*':
+				case '8':
+				case 'i':
+				case 'k':
+				case ',':
+				case '<':
+					foot = 1;
+					toe = 2;
+					break;
+				case '(':
+				case '9':
+				case 'o':
+				case 'l':
+				case '.':
+				case '>':
+					foot = 1;
+					toe = 3;
+					break;
+				case ')':
+				case '0':
+				case 'p':
+				case ';':
+				case ':':
+				case '/':
+				case '?':
+				case '-':
+				case '_':
+				case '=':
+				case '+':
+				case ']':
+				case '}':
+				case '\\':
+				case '|':
+					foot = 1;
+					toe = 4;
+					break;
+			}
+			if (toe >= 0) {
+				this.feet[foot].curl(toe);
+			}
 		}
 	};
 

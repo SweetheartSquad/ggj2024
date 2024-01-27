@@ -24,3 +24,10 @@ textures/faces/smile.x3.png
 textures/faces/starmouth.x4.png
 textures/faces/lookAround.x4.png
 textures/emptyFrame.png
+
+textures/foot/toe0.x2.png
+textures/foot/toe1.x2.png
+textures/foot/toe2.x2.png
+textures/foot/toe3.x2.png
+textures/foot/toe4.x2.png
+textures/foot/foot.png
