@@ -44,7 +44,7 @@ export class TextInput extends GameObject {
 			this.display.container.addChild(t);
 		});
 		this.display.container.x = -this.display.container.width / 2;
-		this.sprScrim.width = this.display.container.width + padding;
+		this.sprScrim.width = this.display.container.width + padding * 2;
 		this.sprScrim.height = this.display.container.height + padding;
 		this.clearCurrent();
 	}

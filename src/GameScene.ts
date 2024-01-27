@@ -131,9 +131,10 @@ export class GameScene {
 		this.sprPortrait.y -= size.y / 2 - 50;
 		this.sprPopup = new Sprite(tex('dialogueBg'));
 		this.textPopup = new BitmapText('test', fontDialogue);
-		this.textPopup.y += 70;
-		this.textPopup.x += 170;
+		this.textPopup.y += 110;
+		this.textPopup.x += 220;
 		this.textPopup.anchor.x = 0.5;
+		this.textPopup.anchor.y = 0.5;
 		this.sprPopup.addChild(this.textPopup);
 		this.sprPopup.x += this.sprPortrait.width;
 		this.sprPortrait.addChild(this.sprPopup);
