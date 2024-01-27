@@ -40,7 +40,7 @@ export class Foot extends GameObject {
 			0,
 			200,
 			10,
-			eases.backOut
+			eases.bounceOut
 		);
 	}
 	uncurl(toe: number) {
