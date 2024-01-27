@@ -232,13 +232,13 @@ export class GameScene {
 
 	async doRun() {
 		this.animatorFace.setAnimation('neutral');
-		sfx("countdownCount");
+		sfx('countdownCount');
 		await this.say('3');
-		sfx("countdownCount");
+		sfx('countdownCount');
 		await this.say('2');
-		sfx("countdownCount");
+		sfx('countdownCount');
 		await this.say('1');
-		sfx("countdownGo");
+		sfx('countdownGo');
 		this.say('GO!');
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			shuffle(lines)[0]
@@ -382,7 +382,6 @@ export class GameScene {
 		if (type === 'Backspace') {
 			this.textInput.backspace();
 		} else {
-
 			this.textInput.addCurrent(type);
 
 			if (!this.textInput.isRight() && wasRight) {
@@ -398,14 +397,14 @@ export class GameScene {
 			if (this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
-					Math.floor(
-						lerp(
-							0,
-							happyFaces.length - 1,
-							this.textInput.strCurrent.length /
-							this.textInput.strTarget.length
-						) + 0.5
-					)
+						Math.floor(
+							lerp(
+								0,
+								happyFaces.length - 1,
+								this.textInput.strCurrent.length /
+									this.textInput.strTarget.length
+							) + 0.5
+						)
 					]
 				);
 				this.textPopup.text = shuffle([
@@ -426,7 +425,6 @@ export class GameScene {
 						this.canPlayGoodBadSound = true;
 					}, 1000);
 				}
-
 			} else if (!this.textInput.isRight()) {
 				this.canBeHappy = false;
 				clearTimeout(this.canBeHappyTimeout);
@@ -449,7 +447,6 @@ export class GameScene {
 					this.canPlayGoodBadSoundTimeout = window.setTimeout(() => {
 						this.canPlayGoodBadSound = true;
 					}, 1000);
-
 				}
 			}
 
