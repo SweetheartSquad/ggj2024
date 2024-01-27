@@ -29,7 +29,9 @@ export class Foot extends GameObject {
 			s.anchor.x = 0.5;
 			this.toes.push(s);
 		});
+		this.toes.reverse();
 		this.toes.forEach((toe) => this.display.container.addChild(toe));
+		this.toes.reverse();
 		this.display.container.addChild(this.base);
 		this.init();
 	}
