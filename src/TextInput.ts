@@ -7,7 +7,10 @@ import { Tween, TweenManager } from './Tweens';
 import { fontInput } from './font';
 import { tex } from './utils';
 
-const padding = 60;
+const padding = {
+	x: 60,
+	y: 60,
+};
 const tintCurrent = 0x00ff00;
 const tintUpcoming = 0xbbbbbb;
 const tintWrong = 0xff0000;
@@ -33,6 +36,7 @@ export class TextInput extends GameObject {
 			texScrim.baseTexture.width / 2,
 			0
 		);
+		padding.x = texScrim.baseTexture.width / 4;
 	}
 
 	setTarget(str: string) {
@@ -51,8 +55,8 @@ export class TextInput extends GameObject {
 			this.display.container.addChild(t);
 		});
 		this.display.container.x = -this.display.container.width / 2;
-		this.sprScrim.width = this.display.container.width + padding * 2;
-		this.sprScrim.height = this.display.container.height + padding;
+		this.sprScrim.width = this.display.container.width + padding.x * 2;
+		this.sprScrim.height = this.display.container.height + padding.y;
 		this.clearCurrent();
 	}
 
@@ -137,8 +141,8 @@ export class TextInput extends GameObject {
 				i.y = Math.sin(t * 0.01 + idx * 0.5) * 2;
 			}
 		});
-		this.sprScrim.x = this.display.container.x - padding;
-		this.sprScrim.y = this.display.container.y - padding / 2;
+		this.sprScrim.x = this.display.container.x - padding.x;
+		this.sprScrim.y = this.display.container.y - padding.y / 2;
 		this.sprScrim.alpha = this.display.container.alpha;
 	}
 }
