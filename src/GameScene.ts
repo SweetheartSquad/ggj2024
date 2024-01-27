@@ -23,7 +23,7 @@ import { V } from './VMath';
 import { size } from './config';
 import { fontDialogue } from './font';
 import { lines } from './lines';
-import { delay, shuffle, tex } from './utils';
+import { delay, lerp, shuffle, tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -198,7 +198,35 @@ export class GameScene {
 		await this.say('hello');
 		this.say('type "start" to tickle my feet');
 		this.textInput.display.container.alpha = 1;
-		await this.requireSequence('start');
+		{
+			let { errors } = await this.requireSequence('start');
+			this.textInput.setTarget('');
+			this.textInput.clearCurrent();
+			if (errors) {
+				this.animatorFace.setAnimation('neutral');
+				this.say('oops! not quite, try that again');
+				errors = (await this.requireSequence('start')).errors;
+				this.textInput.setTarget('');
+				this.textInput.clearCurrent();
+				if (errors) {
+					this.animatorFace.setAnimation('surprise');
+					this.say('hmm, you seem a little rusty?');
+					errors = (await this.requireSequence('start')).errors;
+					this.textInput.setTarget('');
+					this.textInput.clearCurrent();
+					if (errors) {
+						this.animatorFace.setAnimation('surprise');
+						await this.say('ugh fine, whatever');
+						await this.say("i guess you'll have to do");
+					}
+				}
+			}
+		}
+		this.animatorFace.setAnimation('neutral');
+		await this.say('3');
+		await this.say('2');
+		await this.say('1');
+		this.say('GO!');
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			shuffle(lines)[0]
 		);
@@ -255,6 +283,9 @@ export class GameScene {
 		this.portraitBumpTween = TweenManager.tween(this, 'portraitBump', 0, 100);
 	}
 
+	canBeHappy = true;
+	canBeHappyTimeout = 0;
+
 	onInput = (event: KeyboardEvent) => {
 		if (this.waiting) return;
 		const keyReplacements: { [key: string]: string | undefined } = {
@@ -278,28 +309,50 @@ export class GameScene {
 			this.textInput.backspace();
 		} else {
 			this.textInput.addCurrent(type);
+
+			// update visuals
 			this.bump();
-			this.animatorFace.setAnimation(
-				shuffle([
-					'neutral',
-					'surprise',
-					'smile',
-					'starmouth',
-					'lookAround',
-					'laugh',
-					'laughCry',
-				])[0]
-			);
-			this.textPopup.text = shuffle([
-				'oh',
-				'ohh',
-				'ohh',
-				'ah',
-				'hehe',
-				'haha',
-				'hee',
-				'teehee',
-			])[0];
+			const happyFaces = ['neutral', 'smile', 'laugh', 'laughCry'];
+			const madFaces = ['starmouth', 'surprise', 'lookAround'];
+			if (this.textInput.isRight() && this.canBeHappy) {
+				this.animatorFace.setAnimation(
+					happyFaces[
+						Math.floor(
+							lerp(
+								0,
+								happyFaces.length - 1,
+								this.textInput.strCurrent.length /
+									this.textInput.strTarget.length
+							) + 0.5
+						)
+					]
+				);
+				this.textPopup.text = shuffle([
+					'oh',
+					'ohh',
+					'ohh',
+					'ah',
+					'hehe',
+					'haha',
+					'hee',
+					'teehee',
+				])[0];
+			} else if (!this.textInput.isRight()) {
+				this.canBeHappy = false;
+				clearTimeout(this.canBeHappyTimeout);
+				this.canBeHappyTimeout = window.setTimeout(() => {
+					this.canBeHappy = true;
+					this.canBeHappyTimeout = 0;
+				}, 1000);
+				this.animatorFace.setAnimation(shuffle(madFaces)[0]);
+				this.textPopup.text = shuffle([
+					'no!',
+					'wrong!',
+					'stop!',
+					'argh!',
+					'gahh!',
+				])[0];
+			}
 
 			let foot = 0;
 			let toe = -1;

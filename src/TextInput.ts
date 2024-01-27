@@ -104,6 +104,13 @@ export class TextInput extends GameObject {
 		);
 	}
 
+	isRight() {
+		return (
+			this.strCurrent[this.strCurrent.length - 1] ===
+			this.strTarget[this.strCurrent.length - 1]
+		);
+	}
+
 	backspace() {
 		if (!this.strCurrent.length) return;
 		this.strCurrent = this.strCurrent.substring(0, this.strCurrent.length - 1);
