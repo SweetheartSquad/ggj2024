@@ -554,7 +554,6 @@ export class GameScene {
 
 					if (this.combo && this.combo % this.comboLimit === 0) {
 						// do combo limit break
-						console.log('limit break');
 						++this.comboLimitBreak;
 						const current = this.textInput.strCurrent;
 						const split = [
