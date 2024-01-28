@@ -573,6 +573,9 @@ export class GameScene {
 						current.split('').forEach((i) => {
 							this.textInput.addCurrent(i);
 						});
+						if (this.textInput.tweenX)
+							TweenManager.abort(this.textInput.tweenX);
+						this.textInput.display.container.x = this.textInput.getX();
 					}
 				}
 			}
