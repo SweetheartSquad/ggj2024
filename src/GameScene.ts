@@ -304,7 +304,6 @@ export class GameScene {
 		this.container.addChild(this.textInput.sprScrim);
 		this.container.addChild(this.textInput.display.container);
 
-		music('bgm');
 		this.init();
 	}
 
@@ -314,16 +313,25 @@ export class GameScene {
 		this.feet[1].transform.y = size.y;
 		this.sprFeather.alpha = 0;
 		this.tower.alpha = 0;
+		this.sprPortrait.alpha = 0;
+		this.sprPopup.visible = false;
+		await delay(500);
+		TweenManager.tween(this.sprPortrait, 'alpha', 1, 1000);
+		await delay(1000);
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
-		await this.say('hello');
+		this.sprPopup.visible = true;
+		await this.say('So...');
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
-		await this.say("I'm Theodore Typtoes Esq. III, and welcome to...");
+		await this.say('Come to test your skills?');
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		await this.say("I'm Theodore Typtoes Esq. III, welcome to...");
 
 		this.sprPopup.scale.x = this.sprPopup.scale.y = 2;
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.screenFilter.flash([1, 1, 1], 200);
 		this.bgs.forEach((i) => TweenManager.tween(i, 'alpha', 1, 500));
 		this.say('Teddy');
+		music('bgm', { fade: 1000 });
 		await delay(500);
 
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
@@ -359,7 +367,7 @@ export class GameScene {
 
 		this.sprPopup.scale.x = this.sprPopup.scale.y = 1;
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
-		this.say('type "start" to tickle my feet');
+		this.say('Type "start" to tickle my feet.');
 		TweenManager.tween(this.sprFeather, 'alpha', 1, 500);
 		{
 			let { errors } = await this.requireSequence('start');
@@ -368,26 +376,32 @@ export class GameScene {
 			if (errors) {
 				sfx(`bad0`, { rate: Math.random() * 0.5 + 1.5 });
 				this.animatorFace.setAnimation('laugh');
-				this.say('oops! not quite, try that again');
+				this.say('Oops! Not quite, try that again.');
 				errors = (await this.requireSequence('start')).errors;
 				this.textInput.setTarget('');
 				this.textInput.clearCurrent();
 				if (errors) {
 					sfx(`bad4`, { rate: Math.random() * 0.5 + 1.5 });
 					this.animatorFace.setAnimation('neutral');
-					this.say('hmm, you seem a little rusty?');
+					this.say('Hmm, you seem a little rusty?');
 					errors = (await this.requireSequence('start')).errors;
 					this.textInput.setTarget('');
 					this.textInput.clearCurrent();
 					if (errors) {
 						sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 						this.animatorFace.setAnimation('annoyed');
-						await this.say('ugh fine, whatever');
-						await this.say("i guess you'll have to do");
+						await this.say('Ugh fine, whatever.');
+						await this.say("I guess you'll have to do...");
 					}
 				}
 			}
 		}
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		await this.say('Great! But watch out...');
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		await this.say(
+			'If you prove your perfection, I may give you a bonus tickle...'
+		);
 
 		this.doRun();
 	}
