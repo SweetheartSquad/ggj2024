@@ -1,5 +1,6 @@
 import eases from 'eases';
 import {
+	BLEND_MODES,
 	BitmapText,
 	Container,
 	DisplayObject,
@@ -24,8 +25,8 @@ import { TextInput } from './TextInput';
 import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
-import { fontCombo, fontDialogue } from './font';
-import { getLine } from './lines';
+import { fontCombo, fontDialogue, fontInput } from './font';
+import { getLine, getTickles } from './lines';
 import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
 
 function depthCompare(
@@ -66,6 +67,7 @@ export class GameScene {
 	comboLimitBreak = 0;
 	combo: number = 0;
 	textCombo: BitmapText;
+	textComboLimitBreakPreview: BitmapText;
 
 	get currentArea() {
 		return this.areas[this.area || ''];
@@ -94,6 +96,7 @@ export class GameScene {
 	tweenFeatherX?: Tween;
 	tweenFeatherY?: Tween;
 	tweenFeatherA?: Tween;
+	aura: Sprite;
 
 	constructor() {
 		const bgs = [
@@ -220,6 +223,15 @@ export class GameScene {
 			})
 		);
 
+		this.aura = new Sprite(tex('aura'));
+		this.aura.blendMode = BLEND_MODES.ADD;
+		this.aura.anchor.x = 1;
+		this.aura.anchor.y = 1;
+		this.aura.alpha = 0;
+		this.aura.x = size.x / 2;
+		this.aura.y = size.y / 2;
+		this.container.addChild(this.aura);
+
 		this.feet = [new Foot(), new Foot()];
 		this.feet.forEach((f) => {
 			this.container.addChild(f.display.container);
@@ -238,6 +250,9 @@ export class GameScene {
 		this.container.addChild(this.textCombo);
 		this.textCombo.x = size.x / 2 - 170;
 		this.textCombo.y = -size.y / 2 + 260;
+
+		this.textComboLimitBreakPreview = new BitmapText(``, fontInput);
+		this.container.addChild(this.textComboLimitBreakPreview);
 
 		this.border.scripts.push(
 			new Updater(this.border, () => {
@@ -366,6 +381,12 @@ export class GameScene {
 
 		this.comboLimit = Math.floor(line.split(' ').length * 0.4);
 		this.comboLimitBreak = 0;
+
+		this.container.addChild(this.textCombo);
+		this.textCombo.x = size.x / 2 - 170;
+		this.textCombo.y = -size.y / 2 + 260;
+
+		this.textComboLimitBreakPreview.text = getTickles();
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			line
 		);
@@ -554,23 +575,27 @@ export class GameScene {
 
 					if (this.combo && this.combo % this.comboLimit === 0) {
 						// do combo limit break
-						console.log('limit break');
 						++this.comboLimitBreak;
 						const current = this.textInput.strCurrent;
 						const split = [
 							this.textInput.strTarget.substring(
 								0,
-								this.textInput.strCurrent.length
+								this.textInput.strCurrent.length + 1
 							),
+							this.textComboLimitBreakPreview.text,
+							' ',
 							this.textInput.strTarget.substring(
 								this.textInput.strCurrent.length + 1
 							),
 						];
-						split.splice(1, 0, 'blahblahblah');
 						this.textInput.setTarget(split.join(''));
 						current.split('').forEach((i) => {
 							this.textInput.addCurrent(i);
 						});
+						if (this.textInput.tweenX)
+							TweenManager.abort(this.textInput.tweenX);
+						this.textInput.display.container.x = this.textInput.getX();
+						this.textComboLimitBreakPreview.text = getTickles();
 					}
 				}
 			}
@@ -616,6 +641,7 @@ export class GameScene {
 					this.textPopup.text = text;
 					this.canPlayGoodBadSound = false;
 					this.combo = 0;
+					this.textComboLimitBreakPreview.text = getTickles();
 				}
 			}
 
@@ -800,6 +826,40 @@ export class GameScene {
 
 		this.sprFeather.pivot.y = Math.sin(curTime * 0.005) * 5;
 		this.sprFeather.pivot.x = Math.sin(curTime * 0.0025) * 5;
+
+		this.aura.alpha = lerp(
+			this.aura.alpha,
+			lerp(
+				0,
+				1,
+				Math.min(1, Math.max(0, this.combo) / Math.max(1, this.comboLimit)) *
+					(Math.sin(curTime * 0.01) * 0.05 + 0.95)
+			),
+			0.1 * game.app.ticker.deltaTime
+		);
+
+		let nextWords = this.textInput.strTarget
+			.substring(Math.max(0, this.furthest))
+			.split(' ');
+		const nextComboLimitBreak =
+			this.comboLimit -
+			(this.combo - Math.floor(this.combo / this.comboLimit) * this.comboLimit);
+		this.textComboLimitBreakPreview.visible = true;
+		nextWords = nextWords.slice(
+			0,
+			nextComboLimitBreak + (nextWords[0] === '' ? 1 : 0)
+		);
+		const comboLimitBreakLetterIdx =
+			Math.max(0, this.furthest) + nextWords.join(' ').length;
+		this.textComboLimitBreakPreview.visible =
+			!!this.textInput.text[comboLimitBreakLetterIdx];
+		if (this.textComboLimitBreakPreview.visible) {
+			this.textComboLimitBreakPreview.x =
+				this.textInput.display.container.x +
+				(this.textInput.text[comboLimitBreakLetterIdx]?.x ?? 0);
+			this.textComboLimitBreakPreview.y =
+				this.textInput.display.container.y - 100;
+		}
 
 		GameObject.update();
 		TweenManager.update();
