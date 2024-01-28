@@ -61,7 +61,9 @@ export class GameScene {
 	sprPopup: Sprite;
 	textPopup: BitmapText;
 
-	furthest: number = -1;
+	furthest = -1;
+	comboLimit = 0;
+	comboLimitBreak = 0;
 	combo: number = 0;
 	textCombo: BitmapText;
 
@@ -197,8 +199,6 @@ export class GameScene {
 		this.sprFeather.anchor.y = 0.8;
 		this.container.addChild(this.sprFeather);
 
-		this.furthest = -1;
-		this.combo = 0;
 		this.textCombo = new BitmapText(``, fontCombo);
 		this.container.addChild(this.textCombo);
 		this.textCombo.x = size.x / 2 - 170;
@@ -327,8 +327,12 @@ export class GameScene {
 		sfx('countdownGo');
 		this.say('GO!');
 		this.reacting = true;
+		const line = getLine();
+
+		this.comboLimit = Math.floor(line.split(' ').length * 0.4);
+		this.comboLimitBreak = 0;
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
-			getLine()
+			line
 		);
 		this.reacting = false;
 
@@ -510,6 +514,12 @@ export class GameScene {
 					this.screenFilter.flash([1, 1, 1, 0.05], 150);
 					this.textPopup.text = text;
 					++this.combo;
+
+					if (this.combo && this.combo % this.comboLimit === 0) {
+						// do combo limit break
+						console.log('limit break');
+						++this.comboLimitBreak;
+					}
 				}
 			}
 
