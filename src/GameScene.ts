@@ -65,6 +65,7 @@ export class GameScene {
 	furthest = -1;
 	comboLimit = 0;
 	comboLimitBreak = 0;
+	comboLimitBreakRanges: [number, number][] = [];
 	combo: number = 0;
 	textCombo: BitmapText;
 	textComboLimitBreakPreview: BitmapText;
@@ -357,7 +358,7 @@ export class GameScene {
 		this.combo = 0;
 		this.furthest = -1;
 
-		this.animatorFace.setAnimation('neutral');
+		this.animatorFace.setAnimation('surprise');
 		this.textInput.setTarget('');
 		sfx('countdown3');
 		await this.say('3');
@@ -374,6 +375,7 @@ export class GameScene {
 				((game.app.ticker.lastTime - start) / 1000 / 60) * 360;
 		});
 		this.border.scripts.push(spinner);
+		this.animatorFace.setAnimation('lookAround');
 		sfx('countdownGo');
 		this.say('GO!');
 		this.reacting = true;
@@ -595,6 +597,10 @@ export class GameScene {
 						if (this.textInput.tweenX)
 							TweenManager.abort(this.textInput.tweenX);
 						this.textInput.display.container.x = this.textInput.getX();
+						this.comboLimitBreakRanges.push([
+							this.textInput.strCurrent.length,
+							this.textComboLimitBreakPreview.text.length,
+						]);
 						this.textComboLimitBreakPreview.text = getTickles();
 					}
 				}
@@ -613,18 +619,28 @@ export class GameScene {
 			];
 			const madFaces = ['annoyed'];
 			if (this.reacting && this.textInput.isRight() && this.canBeHappy) {
-				this.animatorFace.setAnimation(
-					happyFaces[
-						Math.floor(
-							lerp(
-								0,
-								happyFaces.length - 1,
-								this.textInput.strCurrent.length /
-									this.textInput.strTarget.length
-							) + 0.5
-						)
-					]
-				);
+				if (
+					this.comboLimitBreakRanges.some(
+						([start, length]) =>
+							this.textInput.strCurrent.length >= start &&
+							this.textInput.strCurrent.length <= start + length
+					)
+				) {
+					this.animatorFace.setAnimation('climax');
+				} else {
+					this.animatorFace.setAnimation(
+						happyFaces[
+							Math.floor(
+								lerp(
+									0,
+									happyFaces.length - 1,
+									this.textInput.strCurrent.length /
+										this.textInput.strTarget.length
+								) + 0.5
+							)
+						]
+					);
+				}
 			} else if (this.reacting && !this.textInput.isRight()) {
 				this.canBeHappy = false;
 				clearTimeout(this.canBeHappyTimeout);
