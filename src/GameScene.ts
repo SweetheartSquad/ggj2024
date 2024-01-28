@@ -224,6 +224,7 @@ export class GameScene {
 
 
 		this.aura = new Sprite(tex('aura'));
+		this.aura.blendMode = BLEND_MODES.ADD;
 		this.aura.anchor.x = 1;
 		this.aura.anchor.y = 1;
 		this.aura.alpha = 1;
