@@ -525,6 +525,7 @@ export class GameScene {
 		const key = event.key;
 		const type = keyReplacements[key] ?? (key.length > 1 ? '' : key);
 		if (!type) return;
+		event.preventDefault();
 		if (type === 'Backspace') {
 			this.textInput.backspace();
 		} else {
