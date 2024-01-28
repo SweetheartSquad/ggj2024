@@ -85,7 +85,7 @@ textures/aura.png
 
 audio/teddy.mp3
 audio/tickle.mp3
-audio/typetoes.mp3
+audio/typtoes.mp3
 audio/tower.mp3
 
 audio/tickleChallenge.mp3
