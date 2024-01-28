@@ -355,6 +355,7 @@ export class GameScene {
 		this.container.addChild(sprClockHands);
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 
+		this.textCombo.visible = true;
 		this.combo = 0;
 		this.furthest = -1;
 		this.comboLimitBreakRanges = [];
@@ -401,7 +402,7 @@ export class GameScene {
 		removeFromArray(this.border.scripts, spinner);
 		spinner.destroy?.();
 		this.say(`that's it!`);
-		this.combo = 0;
+		this.textCombo.visible = false;
 		await delay(2000);
 
 		this.sprPopup.scale.x = 2;
