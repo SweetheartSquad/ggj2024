@@ -413,9 +413,13 @@ export class GameScene {
 			this.animatorFace.setAnimation('laughCry');
 			this.textInput.setTarget('');
 			sfx(`good12`, { rate: Math.random() * 0.5 + 1.5 });
-			await this.say(
-				`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
-			);
+			await Promise.race([
+				this.say(
+					`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
+				),
+				this.requireSequence('skip'),
+			]);
+			this.textInput.setTarget('');
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
@@ -428,9 +432,13 @@ export class GameScene {
 			this.animatorFace.setAnimation('laugh');
 			this.textInput.setTarget('');
 			sfx(`good11`, { rate: Math.random() * 0.5 + 1.5 });
-			await this.say(
-				`wow, my feet are feelin' fly! but could you do better next time?`
-			);
+			await Promise.race([
+				this.say(
+					`wow, my feet are feelin' fly! but could you do better next time?`
+				),
+				this.requireSequence('skip'),
+			]);
+			this.textInput.setTarget('');
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
 				`you did ${Math.round(
@@ -443,9 +451,13 @@ export class GameScene {
 			this.animatorFace.setAnimation('annoyed');
 			this.textInput.setTarget('');
 			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
-			await this.say(
-				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
-			);
+			await Promise.race([
+				this.say(
+					`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
+				),
+				this.requireSequence('skip'),
+			]);
+			this.textInput.setTarget('');
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.animatorFace.setAnimation('neutral');
 			this.say(
