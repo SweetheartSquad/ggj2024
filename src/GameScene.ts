@@ -138,14 +138,13 @@ export class GameScene {
 
 		const bg = new Sprite(tex('background'));
 		bg.anchor.x = bg.anchor.y = 0.5;
-		bg.scale.x = bg.scale.y = 1;
+		bg.scale.x = bg.scale.y = 2;
 		this.container.addChild(bg);
-		this.border.scripts.push(
-			new Animator(this.border, {
-				spr: bg,
-				freq: 1 / 100,
-			})
-		);
+		const animatorBg = new Animator(this.border, {
+			spr: bg,
+			freq: 1 / 100,
+		});
+		this.border.scripts.push(animatorBg);
 		const texBorder = tex('border');
 		const spr = new NineSlicePlane(
 			texBorder,
@@ -160,6 +159,42 @@ export class GameScene {
 		spr.x -= spr.width / 2;
 		spr.y -= spr.height / 2;
 		this.container.addChild(spr);
+		this.border.scripts.push({
+			gameObject: this.border,
+			update: () => {
+				animatorBg.freq =
+					(1 + Math.max(this.combo, 0) / Math.max(this.comboLimit, 1)) / 150;
+				bg.tint = parseInt(
+					`0x${Math.floor(
+						lerp(
+							128,
+							255,
+							Math.sin(game.app.ticker.lastTime * 0.001) * 0.5 + 0.5
+						)
+					).toString(16)}${Math.floor(
+						lerp(
+							128,
+							255,
+							Math.sin(
+								game.app.ticker.lastTime * 0.001 + (Math.PI * 2 * 1) / 3
+							) *
+								0.5 +
+								0.5
+						)
+					).toString(16)}${Math.floor(
+						lerp(
+							128,
+							255,
+							Math.sin(
+								game.app.ticker.lastTime * 0.001 + (Math.PI * 2 * 2) / 3
+							) *
+								0.5 +
+								0.5
+						)
+					).toString(16)}`
+				);
+			},
+		});
 
 		this.sprPortrait = new Sprite(tex('emptyFrame'));
 		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
