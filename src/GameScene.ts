@@ -181,8 +181,8 @@ export class GameScene {
 							Math.sin(
 								game.app.ticker.lastTime * 0.001 + (Math.PI * 2 * 1) / 3
 							) *
-							0.5 +
-							0.5
+								0.5 +
+								0.5
 						)
 					).toString(16)}${Math.floor(
 						lerp(
@@ -191,8 +191,8 @@ export class GameScene {
 							Math.sin(
 								game.app.ticker.lastTime * 0.001 + (Math.PI * 2 * 2) / 3
 							) *
-							0.5 +
-							0.5
+								0.5 +
+								0.5
 						)
 					).toString(16)}`
 				);
@@ -222,7 +222,6 @@ export class GameScene {
 				freq: 1 / 200,
 			})
 		);
-
 
 		this.aura = new Sprite(tex('aura'));
 		this.aura.blendMode = BLEND_MODES.ADD;
@@ -350,7 +349,7 @@ export class GameScene {
 			sprClockHands.anchor.y =
 			sprClockBody.anchor.x =
 			sprClockBody.anchor.y =
-			0.5;
+				0.5;
 		this.container.addChild(sprClockBody);
 		this.container.addChild(sprClockHands);
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
@@ -616,14 +615,14 @@ export class GameScene {
 			if (this.reacting && this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
-					Math.floor(
-						lerp(
-							0,
-							happyFaces.length - 1,
-							this.textInput.strCurrent.length /
-							this.textInput.strTarget.length
-						) + 0.5
-					)
+						Math.floor(
+							lerp(
+								0,
+								happyFaces.length - 1,
+								this.textInput.strCurrent.length /
+									this.textInput.strTarget.length
+							) + 0.5
+						)
 					]
 				);
 			} else if (this.reacting && !this.textInput.isRight()) {
