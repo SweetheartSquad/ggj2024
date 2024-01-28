@@ -467,6 +467,7 @@ export class GameScene {
 		this.reacting = false;
 
 		sfx('endBuzzer');
+		this.screenFilter.flash([1, 1, 1], 1000);
 		sprClockHands.destroy();
 		sprClockBody.destroy();
 		removeFromArray(this.border.scripts, spinner);
