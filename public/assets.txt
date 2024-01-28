@@ -80,3 +80,5 @@ textures/clockHands.png
 textures/clockBody.png
 
 textures/feather.png
+
+textures/aura.png
