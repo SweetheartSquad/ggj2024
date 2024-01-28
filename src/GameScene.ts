@@ -629,6 +629,7 @@ export class GameScene {
 					)
 				) {
 					this.animatorFace.setAnimation('climax');
+					this.screenFilter.flash([1, 0.75, 0, 0.1], 200);
 				} else {
 					this.animatorFace.setAnimation(
 						happyFaces[
