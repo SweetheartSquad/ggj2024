@@ -27,7 +27,7 @@ import { V } from './VMath';
 import { size } from './config';
 import { fontCombo, fontDialogue, fontInput } from './font';
 import { getLine, getTickles } from './lines';
-import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
+import { delay, lerp, randItem, removeFromArray, tex } from './utils';
 
 function depthCompare(
 	a: DisplayObject & { offset?: number },
@@ -663,7 +663,7 @@ export class GameScene {
 					this.canBeHappy = true;
 					this.canBeHappyTimeout = 0;
 				}, 1000);
-				this.animatorFace.setAnimation(shuffle(madFaces)[0]);
+				this.animatorFace.setAnimation(randItem(madFaces));
 
 				if (this.canPlayGoodBadSound) {
 					const [idx, text] = randomSound('bad');
