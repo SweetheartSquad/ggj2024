@@ -1,5 +1,6 @@
 import eases from 'eases';
 import {
+	BLEND_MODES,
 	BitmapText,
 	Container,
 	DisplayObject,
@@ -227,7 +228,7 @@ export class GameScene {
 		this.aura.blendMode = BLEND_MODES.ADD;
 		this.aura.anchor.x = 1;
 		this.aura.anchor.y = 1;
-		this.aura.alpha = 1;
+		this.aura.alpha = 0;
 		this.aura.x = size.x / 2;
 		this.aura.y = size.y / 2;
 		this.container.addChild(this.aura);
@@ -826,6 +827,17 @@ export class GameScene {
 
 		this.sprFeather.pivot.y = Math.sin(curTime * 0.005) * 5;
 		this.sprFeather.pivot.x = Math.sin(curTime * 0.0025) * 5;
+
+		this.aura.alpha = lerp(
+			this.aura.alpha,
+			lerp(
+				0,
+				1,
+				Math.min(1, Math.max(0, this.combo) / Math.max(1, this.comboLimit)) *
+					(Math.sin(curTime * 0.01) * 0.05 + 0.95)
+			),
+			0.1 * game.app.ticker.deltaTime
+		);
 
 		let nextWords = this.textInput.strTarget
 			.substring(Math.max(0, this.furthest))
