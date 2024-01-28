@@ -433,12 +433,15 @@ export class GameScene {
 		this.animatorFace.setAnimation('surprise');
 		this.textInput.setTarget('');
 		sfx('countdown3');
+		this.screenFilter.flash([1, 1, 1, 0.2], 300);
 		await this.say('3');
 		sprClockHands.alpha = sprClockBody.alpha = 0.5;
 		sfx('countdown2');
+		this.screenFilter.flash([1, 1, 1, 0.2], 300);
 		await this.say('2');
 		sprClockHands.alpha = sprClockBody.alpha = 0.75;
 		sfx('countdown1');
+		this.screenFilter.flash([1, 1, 1, 0.2], 300);
 		await this.say('1');
 		sprClockHands.alpha = sprClockBody.alpha = 1;
 		const start = game.app.ticker.lastTime;
@@ -448,6 +451,7 @@ export class GameScene {
 		});
 		this.border.scripts.push(spinner);
 		this.animatorFace.setAnimation('lookAround');
+		this.screenFilter.flash([1, 1, 1, 0.2], 300);
 		sfx('countdownGo');
 		this.say('GO!');
 		this.reacting = true;
@@ -467,6 +471,7 @@ export class GameScene {
 		this.reacting = false;
 
 		sfx('endBuzzer');
+		this.screenFilter.flash([1, 1, 1], 1000);
 		sprClockHands.destroy();
 		sprClockBody.destroy();
 		removeFromArray(this.border.scripts, spinner);
@@ -712,6 +717,7 @@ export class GameScene {
 					)
 				) {
 					this.animatorFace.setAnimation('climax');
+					sfx('good4', { rate: 2 + Math.random() * 0.5, volume: 0.6 });
 					this.screenFilter.flash([1, 0.75, 0, 0.1], 200);
 				} else {
 					this.animatorFace.setAnimation(
