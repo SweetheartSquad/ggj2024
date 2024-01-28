@@ -19,9 +19,10 @@ export function getLine() {
 		`A mile walked is a mile lived. Each step a new experience. Each cut, scrape and blister a challenge overcome. Time heals all wounds but the scars will last forever. The calluses grow harder each day, and the nails grow longer. We trim them back but they don't give up. They keep on growing. They keep on walking, until they reach the end of the path; the edge of the cliff. They take the leap`
 	].map((i) => i.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim());
 	let line = '';
+	let guard = 0;
 	do {
 		line = shuffle(lines)[0];
-	} while (line.startsWith(lastLine));
+	} while (line.startsWith(lastLine) && ++guard < 100);
 	lastLine = line.substring(0, 10);
 	return line;
 }
