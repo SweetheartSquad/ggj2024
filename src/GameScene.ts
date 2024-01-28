@@ -321,15 +321,18 @@ export class GameScene {
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.sprPopup.visible = true;
 		await this.say('So...');
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		sfx(`good8`, { rate: Math.random() * 0.5 + 1.5 });
+		this.animatorFace.setAnimation('laugh');
 		await this.say('Come to test your skills?');
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		this.animatorFace.setAnimation('smile');
 		await this.say("I'm Theodore Typtoes Esq. III, welcome to...");
 
 		this.sprPopup.scale.x = this.sprPopup.scale.y = 2;
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.screenFilter.flash([1, 1, 1], 200);
 		this.bgs.forEach((i) => TweenManager.tween(i, 'alpha', 1, 500));
+		this.animatorFace.setAnimation('surprise');
 		this.say('Teddy');
 		music('bgm', { fade: 1000 });
 		await delay(500);
@@ -363,10 +366,12 @@ export class GameScene {
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.screenFilter.flash([1, 1, 1], 500);
 		TweenManager.tween(this.tower, 'alpha', 1, 500);
+		this.animatorFace.setAnimation('lookAround');
 		await this.say('Teddy Typtoes Tickle Tower');
 
 		this.sprPopup.scale.x = this.sprPopup.scale.y = 1;
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		sfx(`good6`, { rate: Math.random() * 0.5 + 1.5 });
+		this.animatorFace.setAnimation('neutral');
 		this.say('Type "start" to tickle my feet.');
 		TweenManager.tween(this.sprFeather, 'alpha', 1, 500);
 		{
@@ -396,12 +401,12 @@ export class GameScene {
 				}
 			}
 		}
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
-		await this.say('Great! But watch out...');
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
-		await this.say(
-			'If you prove your perfection, I may give you a bonus tickle...'
-		);
+		sfx(`good9`, { rate: Math.random() * 0.5 + 1.5 });
+		this.animatorFace.setAnimation('neutral');
+		await this.say('Okay! But watch out...');
+		sfx(`good7`, { rate: Math.random() * 0.5 + 1.5 });
+		this.animatorFace.setAnimation('climax');
+		await this.say('Perfect ticklers may be given a bonus tickle...');
 
 		this.doRun();
 	}
