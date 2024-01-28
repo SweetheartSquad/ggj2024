@@ -64,6 +64,7 @@ export class GameScene {
 	furthest = -1;
 	comboLimit = 0;
 	comboLimitBreak = 0;
+	comboLimitBreakText = '';
 	combo: number = 0;
 	textCombo: BitmapText;
 
@@ -366,6 +367,7 @@ export class GameScene {
 
 		this.comboLimit = Math.floor(line.split(' ').length * 0.4);
 		this.comboLimitBreak = 0;
+		this.comboLimitBreakText = getTickles();
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
 			line
 		);
@@ -561,7 +563,7 @@ export class GameScene {
 								0,
 								this.textInput.strCurrent.length + 1
 							),
-							getTickles(),
+							this.comboLimitBreakText,
 							' ',
 							this.textInput.strTarget.substring(
 								this.textInput.strCurrent.length + 1
@@ -574,6 +576,7 @@ export class GameScene {
 						if (this.textInput.tweenX)
 							TweenManager.abort(this.textInput.tweenX);
 						this.textInput.display.container.x = this.textInput.getX();
+						this.comboLimitBreakText = getTickles();
 					}
 				}
 			}
