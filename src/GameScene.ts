@@ -138,7 +138,7 @@ export class GameScene {
 
 		const bg = new Sprite(tex('background'));
 		bg.anchor.x = bg.anchor.y = 0.5;
-		bg.scale.x = bg.scale.y = 4;
+		bg.scale.x = bg.scale.y = 1;
 		this.container.addChild(bg);
 		this.border.scripts.push(
 			new Animator(this.border, {
