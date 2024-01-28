@@ -305,6 +305,7 @@ export class GameScene {
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 
 		this.combo = 0;
+		this.furthest = -1;
 
 		this.animatorFace.setAnimation('neutral');
 		this.textInput.setTarget('');
