@@ -7,8 +7,7 @@ concurrency:
 
 env:
   ITCH_USER: sweetheartsquad
-  # TODO: real slug
-  ITCH_GAME: ggj2024
+  ITCH_GAME: teddy-typtoes-tickle-tower
   DISCORD_USERNAME: ${{ github.repository }}
   DISCORD_AVATAR: https://raw.githubusercontent.com/${{ github.repository }}/main/src/assets/icon.png
 

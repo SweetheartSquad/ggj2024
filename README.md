@@ -1,4 +1,4 @@
-# ggj2024
+# Teddy Typtoes Tickle Tower
 
 ![icon](./public/assets/icon.png)
 
