@@ -561,8 +561,16 @@ export class GameScene {
 
 			// update visuals
 			this.bump();
-			const happyFaces = ['neutral', 'smile', 'laugh', 'laughCry'];
-			const madFaces = ['starmouth', 'surprise', 'lookAround'];
+			const happyFaces = [
+				'neutral',
+				'lookAround',
+				'surprise',
+				'smile',
+				'laugh',
+				'starmouth',
+				'laughCry',
+			];
+			const madFaces = ['annoyed'];
 			if (this.reacting && this.textInput.isRight() && this.canBeHappy) {
 				this.animatorFace.setAnimation(
 					happyFaces[
