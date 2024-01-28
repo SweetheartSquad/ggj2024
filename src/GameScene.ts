@@ -556,6 +556,21 @@ export class GameScene {
 						// do combo limit break
 						console.log('limit break');
 						++this.comboLimitBreak;
+						const current = this.textInput.strCurrent;
+						const split = [
+							this.textInput.strTarget.substring(
+								0,
+								this.textInput.strCurrent.length
+							),
+							this.textInput.strTarget.substring(
+								this.textInput.strCurrent.length + 1
+							),
+						];
+						split.splice(1, 0, 'blahblahblah');
+						this.textInput.setTarget(split.join(''));
+						current.split('').forEach((i) => {
+							this.textInput.addCurrent(i);
+						});
 					}
 				}
 			}
