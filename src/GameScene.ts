@@ -560,8 +560,10 @@ export class GameScene {
 						const split = [
 							this.textInput.strTarget.substring(
 								0,
-								this.textInput.strCurrent.length
+								this.textInput.strCurrent.length + 1
 							),
+							getTickles(),
+							' ',
 							this.textInput.strTarget.substring(
 								this.textInput.strCurrent.length + 1
 							),
