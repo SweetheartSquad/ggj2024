@@ -61,6 +61,7 @@ export class GameScene {
 	sprPopup: Sprite;
 	textPopup: BitmapText;
 
+	furthest: number = -1;
 	combo: number = 0;
 	textCombo: BitmapText;
 
@@ -107,19 +108,19 @@ export class GameScene {
 			this.container.addChild(bgParallax.display.container);
 			bgParallax.spr.texture.baseTexture.scaleMode = SCALE_MODES.LINEAR;
 
-			const start = game.app.ticker.lastTime;
+			let speed = 100;
 			bgParallax.scripts.push({
 				gameObject: bgParallax,
-				update() {
-					const speed = 100; // TODO: speed based on typing
-					bgParallax.spr.tilePosition.x =
-						((game.app.ticker.lastTime - start) / 1000) *
-						speed *
-						bgParallax.mult[0];
-					bgParallax.spr.tilePosition.y =
-						((game.app.ticker.lastTime - start) / 1000) *
-						speed *
-						bgParallax.mult[1];
+				update: () => {
+					speed = lerp(
+						speed,
+						100 + (this.combo || 1) * 10,
+						0.1 * game.app.ticker.deltaTime
+					);
+					bgParallax.spr.tilePosition.x +=
+						(game.app.ticker.deltaMS / 1000) * speed * bgParallax.mult[0];
+					bgParallax.spr.tilePosition.y +=
+						(game.app.ticker.deltaMS / 1000) * speed * bgParallax.mult[1];
 				},
 			});
 		});
@@ -195,6 +196,7 @@ export class GameScene {
 		this.sprFeather.anchor.y = 0.8;
 		this.container.addChild(this.sprFeather);
 
+		this.furthest = -1;
 		this.combo = 0;
 		this.textCombo = new BitmapText(``, fontCombo);
 		this.container.addChild(this.textCombo);
@@ -486,7 +488,10 @@ export class GameScene {
 			this.textInput.backspace();
 		} else {
 			this.textInput.addCurrent(type);
-			if (this.textInput.strTarget[this.textInput.strCurrent.length] === ' ') {
+			if (
+				this.textInput.strTarget[this.textInput.strCurrent.length] === ' ' &&
+				this.textInput.strCurrent.length > this.furthest
+			) {
 				this.canPlayGoodBadSound = true;
 
 				if (
@@ -690,6 +695,8 @@ export class GameScene {
 					(t) => Math.sin(t * Math.PI * 2 * 3 + Math.PI) * 20 * eases.backOut(t)
 				);
 			}
+
+			this.furthest = Math.max(this.furthest, this.textInput.strCurrent.length);
 		}
 	};
 

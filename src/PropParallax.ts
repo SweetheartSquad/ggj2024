@@ -88,16 +88,4 @@ export class PropParallax extends GameObject {
 		this.display.updatePosition();
 		this.init();
 	}
-
-	update() {
-		const camera = window.scene?.camera;
-		if (!camera) return;
-		this.transform.x = camera.display.container.pivot.x;
-		this.transform.y = camera.display.container.pivot.y + this.offset;
-		this.spr.tilePosition.x =
-			-camera.display.container.pivot.x * this.mult[0] + this.tileOffset.x;
-		this.spr.tilePosition.y =
-			-camera.display.container.pivot.y * this.mult[1] + this.tileOffset.y;
-		super.update();
-	}
 }
