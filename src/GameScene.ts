@@ -98,6 +98,8 @@ export class GameScene {
 	tweenFeatherY?: Tween;
 	tweenFeatherA?: Tween;
 	aura: Sprite;
+	bgs: Sprite[] = [];
+	tower: Sprite;
 
 	constructor() {
 		const bgs = [
@@ -113,6 +115,7 @@ export class GameScene {
 			this.take(bgParallax);
 			this.container.addChild(bgParallax.display.container);
 			bgParallax.spr.texture.baseTexture.scaleMode = SCALE_MODES.LINEAR;
+			this.bgs.push(bgParallax.spr);
 
 			let speed = 100;
 			bgParallax.scripts.push({
@@ -140,12 +143,12 @@ export class GameScene {
 		vignette.anchor.x = vignette.anchor.y = 0.5;
 		this.container.addChild(vignette);
 
-		const bg = new Sprite(tex('background'));
-		bg.anchor.x = bg.anchor.y = 0.5;
-		bg.scale.x = bg.scale.y = 2;
-		this.container.addChild(bg);
+		this.tower = new Sprite(tex('background'));
+		this.tower.anchor.x = this.tower.anchor.y = 0.5;
+		this.tower.scale.x = this.tower.scale.y = 2;
+		this.container.addChild(this.tower);
 		const animatorBg = new Animator(this.border, {
-			spr: bg,
+			spr: this.tower,
 			freq: 1 / 100,
 		});
 		this.border.scripts.push(animatorBg);
@@ -158,17 +161,17 @@ export class GameScene {
 			texBorder.height / 3
 		);
 		spr.name = 'border';
-		spr.width = bg.width;
-		spr.height = bg.height;
+		spr.width = this.tower.width / 2;
+		spr.height = this.tower.height / 2;
 		spr.x -= spr.width / 2;
 		spr.y -= spr.height / 2;
-		this.container.addChild(spr);
+		this.tower.addChild(spr);
 		this.border.scripts.push({
 			gameObject: this.border,
 			update: () => {
 				animatorBg.freq =
 					(1 + Math.max(this.combo, 0) / Math.max(this.comboLimit, 1)) / 150;
-				bg.tint = parseInt(
+				this.tower.tint = parseInt(
 					`0x${Math.floor(
 						lerp(
 							128,
@@ -306,10 +309,58 @@ export class GameScene {
 	}
 
 	async init() {
+		this.bgs.forEach((i) => (i.alpha = 0));
+		this.feet[0].transform.y = size.y;
+		this.feet[1].transform.y = size.y;
+		this.sprFeather.alpha = 0;
+		this.tower.alpha = 0;
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		await this.say('hello');
 		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		await this.say("I'm Theodore Typtoes Esq. III, and welcome to...");
+
+		this.sprPopup.scale.x = this.sprPopup.scale.y = 2;
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		this.screenFilter.flash([1, 1, 1], 200);
+		this.bgs.forEach((i) => TweenManager.tween(i, 'alpha', 1, 500));
+		this.say('Teddy');
+		await delay(500);
+
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		this.screenFilter.flash([1, 1, 1], 300);
+		TweenManager.tween(
+			this.feet[0].transform,
+			'y',
+			0,
+			500,
+			undefined,
+			eases.elasticOut
+		);
+		this.say('Teddy Typtoes');
+		await delay(500);
+
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		this.screenFilter.flash([1, 1, 1], 400);
+		TweenManager.tween(
+			this.feet[1].transform,
+			'y',
+			0,
+			500,
+			undefined,
+			eases.elasticOut
+		);
+		this.say('Teddy Typtoes Tickle');
+		await delay(500);
+
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		this.screenFilter.flash([1, 1, 1], 500);
+		TweenManager.tween(this.tower, 'alpha', 1, 500);
+		await this.say('Teddy Typtoes Tickle Tower');
+
+		this.sprPopup.scale.x = this.sprPopup.scale.y = 1;
+		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 		this.say('type "start" to tickle my feet');
+		TweenManager.tween(this.sprFeather, 'alpha', 1, 500);
 		{
 			let { errors } = await this.requireSequence('start');
 			this.textInput.setTarget('');
@@ -405,8 +456,7 @@ export class GameScene {
 		this.textCombo.visible = false;
 		await delay(2000);
 
-		this.sprPopup.scale.x = 2;
-		this.sprPopup.scale.y = 2;
+		this.sprPopup.scale.x = this.sprPopup.scale.y = 2;
 		this.textPopup.fontSize = (fontDialogue.fontSize ?? 1) / 2;
 
 		if (errors === 0) {
@@ -472,8 +522,7 @@ export class GameScene {
 			const check = async () => {
 				const { errors } = await this.requireSequence('restart');
 
-				this.sprPopup.scale.x = 1;
-				this.sprPopup.scale.y = 1;
+				this.sprPopup.scale.x = this.sprPopup.scale.y = 1;
 				this.textPopup.fontSize = fontDialogue.fontSize;
 				if (errors) {
 					this.animatorFace.setAnimation('neutral');
