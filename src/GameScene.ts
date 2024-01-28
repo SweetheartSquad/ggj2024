@@ -712,6 +712,7 @@ export class GameScene {
 					)
 				) {
 					this.animatorFace.setAnimation('climax');
+					sfx('good4', { rate: 2 + Math.random() * 0.5, volume: 0.6 });
 					this.screenFilter.flash([1, 0.75, 0, 0.1], 200);
 				} else {
 					this.animatorFace.setAnimation(
