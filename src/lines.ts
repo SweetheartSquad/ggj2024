@@ -1,4 +1,4 @@
-import { randRange, shuffle } from "./utils";
+import { randItem, randRange, shuffle } from './utils';
 
 let lastLine = 'NONE';
 export function getLine() {
@@ -25,4 +25,36 @@ export function getLine() {
 	} while (line.startsWith(lastLine) && ++guard < 100);
 	lastLine = line.substring(0, 10);
 	return line;
+}
+
+export function getTickles() {
+	const basics = `abcdefghijklmnopqrstuvwxyz1234567890`;
+	const rows = [`1234567890-=`, `qwertyuiop`, `asdfghjkl;'`, `zxcvbnm,./`];
+	const patterns = {
+		alternate: () => shuffle(basics.split('')).slice(0, 2).join(''),
+		roll: () => {
+			const row = shuffle(rows)[0];
+			const start = Math.floor(randRange(0, row.length));
+			return row
+				.repeat(2)
+				.substring(start, start + Math.floor(randRange(3, row.length / 2)));
+		},
+		rotation: () => {
+			const set = shuffle([
+				'wdas',
+				'efds',
+				'rgfd',
+				'thgf',
+				'yjhg',
+				'ukjh',
+				'ilkj',
+			])[0];
+			if (Math.random() > 0.5) set.split('').reverse().join('');
+			return set;
+		},
+	};
+
+	const pattern = randItem(Object.keys(patterns)) as keyof typeof patterns;
+	const value = patterns[pattern]();
+	return value.repeat(Math.floor(randRange(4, 8)));
 }

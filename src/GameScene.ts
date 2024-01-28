@@ -25,7 +25,7 @@ import { Tween, TweenManager } from './Tweens';
 import { V } from './VMath';
 import { size } from './config';
 import { fontCombo, fontDialogue } from './font';
-import { getLine } from './lines';
+import { getLine, getTickles } from './lines';
 import { delay, lerp, removeFromArray, shuffle, tex } from './utils';
 
 function depthCompare(
@@ -567,7 +567,6 @@ export class GameScene {
 								this.textInput.strCurrent.length + 1
 							),
 						];
-						split.splice(1, 0, 'blahblahblah');
 						this.textInput.setTarget(split.join(''));
 						current.split('').forEach((i) => {
 							this.textInput.addCurrent(i);
