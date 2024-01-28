@@ -300,21 +300,21 @@ export class GameScene {
 			this.textInput.clearCurrent();
 			if (errors) {
 				sfx(`bad0`, { rate: Math.random() * 0.5 + 1.5 });
-				this.animatorFace.setAnimation('neutral');
+				this.animatorFace.setAnimation('laugh');
 				this.say('oops! not quite, try that again');
 				errors = (await this.requireSequence('start')).errors;
 				this.textInput.setTarget('');
 				this.textInput.clearCurrent();
 				if (errors) {
 					sfx(`bad4`, { rate: Math.random() * 0.5 + 1.5 });
-					this.animatorFace.setAnimation('surprise');
+					this.animatorFace.setAnimation('neutral');
 					this.say('hmm, you seem a little rusty?');
 					errors = (await this.requireSequence('start')).errors;
 					this.textInput.setTarget('');
 					this.textInput.clearCurrent();
 					if (errors) {
 						sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
-						this.animatorFace.setAnimation('surprise');
+						this.animatorFace.setAnimation('annoyed');
 						await this.say('ugh fine, whatever');
 						await this.say("i guess you'll have to do");
 					}
@@ -415,13 +415,14 @@ export class GameScene {
 				)}s, but you made ${errors} whoopsies! why don't you type "restart" and tickle me again?`
 			);
 		} else {
-			this.animatorFace.setAnimation('neutral');
+			this.animatorFace.setAnimation('annoyed');
 			this.textInput.setTarget('');
 			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 			await this.say(
 				`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
 			);
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+			this.animatorFace.setAnimation('neutral');
 			this.say(
 				`you did ${Math.round(
 					wpm
