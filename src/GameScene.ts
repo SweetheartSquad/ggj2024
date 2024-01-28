@@ -659,6 +659,7 @@ export class GameScene {
 
 					if (this.combo && this.combo % this.comboLimit === 0) {
 						// do combo limit break
+						sfx('endBuzzer');
 						++this.comboLimitBreak;
 						const current = this.textInput.strCurrent;
 						const split = [
