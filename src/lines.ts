@@ -56,5 +56,5 @@ export function getTickles() {
 
 	const pattern = randItem(Object.keys(patterns)) as keyof typeof patterns;
 	const value = patterns[pattern]();
-	return value.repeat(Math.floor(randRange(4, 8)));
+	return value.repeat(Math.floor(randRange(6, 12)));
 }
