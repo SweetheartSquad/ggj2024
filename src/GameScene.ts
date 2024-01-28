@@ -136,11 +136,12 @@ export class GameScene {
 
 		const bg = new Sprite(tex('background'));
 		bg.anchor.x = bg.anchor.y = 0.5;
+		bg.scale.x = bg.scale.y = 4;
 		this.container.addChild(bg);
 		this.border.scripts.push(
 			new Animator(this.border, {
 				spr: bg,
-				freq: 1 / 200,
+				freq: 1 / 100,
 			})
 		);
 		const texBorder = tex('border');
