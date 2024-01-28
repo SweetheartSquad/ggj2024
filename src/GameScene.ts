@@ -329,7 +329,7 @@ export class GameScene {
 		await this.say("I'm Theodore Typtoes Esq. III, welcome to...");
 
 		this.sprPopup.scale.x = this.sprPopup.scale.y = 2;
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		sfx(`teddy`);
 		this.screenFilter.flash([1, 1, 1], 200);
 		this.bgs.forEach((i) => TweenManager.tween(i, 'alpha', 1, 500));
 		this.animatorFace.setAnimation('surprise');
@@ -337,7 +337,7 @@ export class GameScene {
 		music('bgm', { fade: 1000 });
 		await delay(500);
 
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		sfx(`typtoes`);
 		this.screenFilter.flash([1, 1, 1], 300);
 		TweenManager.tween(
 			this.feet[0].transform,
@@ -350,7 +350,7 @@ export class GameScene {
 		this.say('Teddy Typtoes');
 		await delay(500);
 
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		sfx(`tickle`);
 		this.screenFilter.flash([1, 1, 1], 400);
 		TweenManager.tween(
 			this.feet[1].transform,
@@ -363,7 +363,7 @@ export class GameScene {
 		this.say('Teddy Typtoes Tickle');
 		await delay(500);
 
-		sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
+		sfx(`tower`);
 		this.screenFilter.flash([1, 1, 1], 500);
 		TweenManager.tween(this.tower, 'alpha', 1, 500);
 		this.animatorFace.setAnimation('lookAround');
@@ -661,7 +661,7 @@ export class GameScene {
 
 					if (this.combo && this.combo % this.comboLimit === 0) {
 						// do combo limit break
-						sfx('endBuzzer');
+						sfx('tickleChallenge');
 						++this.comboLimitBreak;
 						const current = this.textInput.strCurrent;
 						const split = [
