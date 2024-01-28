@@ -61,7 +61,9 @@ export class GameScene {
 	sprPopup: Sprite;
 	textPopup: BitmapText;
 
-	furthest: number = -1;
+	furthest = -1;
+	comboLimit = 0;
+	comboLimitBreak = 0;
 	combo: number = 0;
 	textCombo: BitmapText;
 
@@ -136,14 +138,13 @@ export class GameScene {
 
 		const bg = new Sprite(tex('background'));
 		bg.anchor.x = bg.anchor.y = 0.5;
-		bg.scale.x = bg.scale.y = 4;
+		bg.scale.x = bg.scale.y = 2;
 		this.container.addChild(bg);
-		this.border.scripts.push(
-			new Animator(this.border, {
-				spr: bg,
-				freq: 1 / 100,
-			})
-		);
+		const animatorBg = new Animator(this.border, {
+			spr: bg,
+			freq: 1 / 100,
+		});
+		this.border.scripts.push(animatorBg);
 		const texBorder = tex('border');
 		const spr = new NineSlicePlane(
 			texBorder,
@@ -158,6 +159,42 @@ export class GameScene {
 		spr.x -= spr.width / 2;
 		spr.y -= spr.height / 2;
 		this.container.addChild(spr);
+		this.border.scripts.push({
+			gameObject: this.border,
+			update: () => {
+				animatorBg.freq =
+					(1 + Math.max(this.combo, 0) / Math.max(this.comboLimit, 1)) / 150;
+				bg.tint = parseInt(
+					`0x${Math.floor(
+						lerp(
+							128,
+							255,
+							Math.sin(game.app.ticker.lastTime * 0.001) * 0.5 + 0.5
+						)
+					).toString(16)}${Math.floor(
+						lerp(
+							128,
+							255,
+							Math.sin(
+								game.app.ticker.lastTime * 0.001 + (Math.PI * 2 * 1) / 3
+							) *
+								0.5 +
+								0.5
+						)
+					).toString(16)}${Math.floor(
+						lerp(
+							128,
+							255,
+							Math.sin(
+								game.app.ticker.lastTime * 0.001 + (Math.PI * 2 * 2) / 3
+							) *
+								0.5 +
+								0.5
+						)
+					).toString(16)}`
+				);
+			},
+		});
 
 		this.sprPortrait = new Sprite(tex('emptyFrame'));
 		this.sprPortrait2 = new Sprite(tex('emptyFrame'));
@@ -197,8 +234,6 @@ export class GameScene {
 		this.sprFeather.anchor.y = 0.8;
 		this.container.addChild(this.sprFeather);
 
-		this.furthest = -1;
-		this.combo = 0;
 		this.textCombo = new BitmapText(``, fontCombo);
 		this.container.addChild(this.textCombo);
 		this.textCombo.x = size.x / 2 - 170;
@@ -305,6 +340,7 @@ export class GameScene {
 		sprClockHands.alpha = sprClockBody.alpha = 0.25;
 
 		this.combo = 0;
+		this.furthest = -1;
 
 		this.animatorFace.setAnimation('neutral');
 		this.textInput.setTarget('');
@@ -326,8 +362,12 @@ export class GameScene {
 		sfx('countdownGo');
 		this.say('GO!');
 		this.reacting = true;
+		const line = getLine();
+
+		this.comboLimit = Math.floor(line.split(' ').length * 0.4);
+		this.comboLimitBreak = 0;
 		const { errors, timeTakenInSeconds, wpm } = await this.requireSequence(
-			getLine()
+			line
 		);
 		this.reacting = false;
 
@@ -509,6 +549,12 @@ export class GameScene {
 					this.screenFilter.flash([1, 1, 1, 0.05], 150);
 					this.textPopup.text = text;
 					++this.combo;
+
+					if (this.combo && this.combo % this.comboLimit === 0) {
+						// do combo limit break
+						console.log('limit break');
+						++this.comboLimitBreak;
+					}
 				}
 			}
 
