@@ -357,6 +357,7 @@ export class GameScene {
 
 		this.combo = 0;
 		this.furthest = -1;
+		this.comboLimitBreakRanges = [];
 
 		this.animatorFace.setAnimation('surprise');
 		this.textInput.setTarget('');
