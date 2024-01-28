@@ -484,18 +484,18 @@ export class GameScene {
 			sfx(`good12`, { rate: Math.random() * 0.5 + 1.5 });
 			await Promise.race([
 				this.say(
-					`wowee, my toes are singing!\nyou're the perfect tickler!\nyou hit all the right spots at all the right times!`
+					`Wowee, my toes are singing!\nYou're the perfect tickler!\nYou hit all the right spots at all the right times!`
 				),
 				this.requireSequence('skip'),
 			]);
 			this.textInput.setTarget('');
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
-				`you did ${Math.round(
+				`You did ${Math.round(
 					wpm
 				)} tickles per minute in ${timeTakenInSeconds.toFixed(
 					2
-				)}s! why don't you type "restart" and tickle me again?`
+				)}s! Why don't you type "restart" and tickle me again?`
 			);
 		} else if (errors <= 5) {
 			this.animatorFace.setAnimation('laugh');
@@ -503,18 +503,20 @@ export class GameScene {
 			sfx(`good11`, { rate: Math.random() * 0.5 + 1.5 });
 			await Promise.race([
 				this.say(
-					`wow, my feet are feelin' fly! but could you do better next time?`
+					`Wow, my feet are feelin' fly! But could you do better next time?`
 				),
 				this.requireSequence('skip'),
 			]);
 			this.textInput.setTarget('');
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.say(
-				`you did ${Math.round(
+				`You did ${Math.round(
 					wpm
 				)} tickles per minute in ${timeTakenInSeconds.toFixed(
 					2
-				)}s, but you made ${errors} whoopsies! why don't you type "restart" and tickle me again?`
+				)}s, but you made ${errors} whoops${
+					errors === 1 ? 'y' : 'ies'
+				}! Why don't you type "restart" and tickle me again?`
 			);
 		} else {
 			this.animatorFace.setAnimation('annoyed');
@@ -522,7 +524,7 @@ export class GameScene {
 			sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
 			await Promise.race([
 				this.say(
-					`ugh, it feels like the soul's been sucked out of my soles! you gotta get some finesse in those fingies!`
+					`Ugh, it feels like the soul's been sucked out of my soles! You gotta get some finesse in those fingies!`
 				),
 				this.requireSequence('skip'),
 			]);
@@ -530,11 +532,11 @@ export class GameScene {
 			sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
 			this.animatorFace.setAnimation('neutral');
 			this.say(
-				`you did ${Math.round(
+				`You did ${Math.round(
 					wpm
 				)} tickles per minute in ${timeTakenInSeconds.toFixed(
 					2
-				)}s, but you made ${errors} whoopsies! why don't you type "restart" and tickle me again?`
+				)}s, but you made ${errors} whoopsies! Why don't you type "restart" and tickle me again?`
 			);
 		}
 		await new Promise<void>((r) => {
@@ -546,9 +548,9 @@ export class GameScene {
 				if (errors) {
 					this.animatorFace.setAnimation('neutral');
 					sfx(`bad1`, { rate: Math.random() * 0.5 + 1.5 });
-					await this.say('seriously?');
+					await this.say('Seriously?');
 					sfx(`good0`, { rate: Math.random() * 0.5 + 1.5 });
-					this.say('type "restart" to try again');
+					this.say('Type "restart" to try again.');
 					check();
 				} else {
 					r();
