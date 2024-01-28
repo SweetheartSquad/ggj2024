@@ -34,7 +34,7 @@ export function getLine() {
 
 export function getTickles() {
 	const basics = `abcdefghijklmnopqrstuvwxyz1234567890`;
-	const rows = [`1234567890 -= `, `qwertyuiop`, `asdfghjkl; '`, `zxcvbnm,./`];
+	const rows = [`1234567890-=`, `qwertyuiop`, `asdfghjkl;'`, `zxcvbnm,./`];
 	const patterns = {
 		alternate: () => shuffle(basics.split('')).slice(0, 2).join(''),
 		roll: () => {
