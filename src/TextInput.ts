@@ -39,7 +39,7 @@ export class TextInput extends GameObject {
 			texScrim.baseTexture.width / 2,
 			0
 		);
-		padding.x = texScrim.baseTexture.width / 4;
+		padding.x = texScrim.baseTexture.width / 3;
 		this.display.container.y = this.getY2();
 	}
 
