@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "Teddy Typtoes Tickle Tower",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Template for a js walkaround game",
 	"author": "SweetHeart Squad <SweetHeartSquad@gmail.com>",
 	"type": "module",
